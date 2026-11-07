@@ -1,0 +1,24 @@
+Ultimate Liquid Glass
+Copyright (c) 2026 Moslem Adib (admos98)
+
+Standalone showcase adapted from the author's Azmoonsaz reference playground,
+commit 0fa31b94a86efb6390fd52f53d61b76464acf6bc.
+
+Optical technique and inherited implementation lineage:
+Chris Feijoo (kube), "Liquid Glass in the Browser"
+https://kube.io/blog/liquid-glass-css-svg/
+https://github.com/kube
+
+The original source attribution is retained. This package does not bundle the
+kube.io site application bundle, article text, fonts, or music artwork. A
+permissive license for that site's source code was not established during this
+maintenance pass. Author MIT licensing does not grant rights to third-party
+code. Review provenance and obtain any required permission before public
+redistribution of substantial inherited upstream code.
+
+Compared peer projects are identified in references/sources.md; comparison is
+not a claim that their code is bundled.
+
+Apple, Liquid Glass, SwiftUI, and SF Symbols are trademarks of Apple Inc.
+This package is an independent browser recreation and agent skill. It is not
+affiliated with or endorsed by Apple.

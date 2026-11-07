@@ -1,0 +1,22 @@
+{
+  "name": "ultimate-liquid-glass",
+  "displayName": "Ultimate Liquid Glass",
+  "version": "1.1.0",
+  "description": "Source-matched refraction, reflective rims, executable measurements, and an offline showcase.",
+  "author": {
+    "name": "Moslem Adib (admos98)"
+  },
+  "homepage": "https://github.com/admos98/ultimate-liquid-glass",
+  "repository": "https://github.com/admos98/ultimate-liquid-glass",
+  "license": "MIT",
+  "keywords": [
+    "liquid-glass",
+    "refraction",
+    "svg",
+    "webgl2",
+    "accessibility"
+  ],
+  "skills": [
+    "."
+  ]
+}

@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+test-results/
+playwright-report/
+*.log
+.DS_Store
+Thumbs.db
+releases/

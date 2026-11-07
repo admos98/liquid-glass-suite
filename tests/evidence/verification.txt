@@ -1,0 +1,61 @@
+$ npm run verify
+> ultimate-liquid-glass@1.1.0 verify
+> npm run check:showcase && npm run test:package && npm test
+
+
+> ultimate-liquid-glass@1.1.0 check:showcase
+> node scripts/build-showcase.mjs --check
+
+PASS: standalone showcase matches its editable source exactly.
+
+> ultimate-liquid-glass@1.1.0 test:package
+> python -m unittest discover -s tests -v
+
+test_cli_rejects_out_of_range_wash (test_package.ChromaMath.test_cli_rejects_out_of_range_wash) ... ok
+test_css_saturation_clamps_channels (test_package.ChromaMath.test_css_saturation_clamps_channels) ... ok
+test_highlight_weighted_wash_keeps_black_fixed (test_package.ChromaMath.test_highlight_weighted_wash_keeps_black_fixed) ... ok
+test_edge_fixture_classes_are_distinct (test_package.MeasurementFixtures.test_edge_fixture_classes_are_distinct) ... ok
+test_fixture_lens_map_is_a_real_pass (test_package.MeasurementFixtures.test_fixture_lens_map_is_a_real_pass) ... ok
+test_warm_cream_retention_matches_the_documented_fixture (test_package.MeasurementFixtures.test_warm_cream_retention_matches_the_documented_fixture) ... ok
+test_general_cap_and_webkit_budget_are_explicit (test_package.PackageContract.test_general_cap_and_webkit_budget_are_explicit) ... ok
+test_native_rules_do_not_force_unintended_shape_merging (test_package.PackageContract.test_native_rules_do_not_force_unintended_shape_merging) ... ok
+test_shipped_internal_references_resolve (test_package.PackageContract.test_shipped_internal_references_resolve) ... ok
+test_showcase_is_self_contained_and_skill_branded (test_package.PackageContract.test_showcase_is_self_contained_and_skill_branded) ... ok
+test_skill_name_and_plugin_path_match_the_installable_directory (test_package.PackageContract.test_skill_name_and_plugin_path_match_the_installable_directory) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.647s
+
+OK
+
+> ultimate-liquid-glass@1.1.0 test
+> playwright test
+
+
+Running 20 tests using 1 worker
+
+  ok  1 [chromium] › tests\browser\showcase.spec.mjs:64:1 › standalone file works offline and creates both real maps (358ms)
+  ok  2 [chromium] › tests\browser\showcase.spec.mjs:77:1 › every preset has the same map bytes, profile and dim law as Azmoon (1.9s)
+CSS parity: {"browser":"chromium","version":"149.0.7827.55","rows":[{"preset":"searchbox","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"switch","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"slider","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"player","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"magnifier","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"panelA","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"preset":"panelB","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"surface":"convex_circle","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"surface":"convex_squircle","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"surface":"concave","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0},{"surface":"lip","width":800,"height":400,"changedPixels":0,"meanChannelDelta":0,"maxChannelDelta":0}]}
+  ok  3 [chromium] › tests\browser\showcase.spec.mjs:88:1 › CSS backdrop pixels exactly match Azmoon across panel presets and surfaces (6.7s)
+  ok  4 [chromium] › tests\browser\showcase.spec.mjs:117:1 › WebGL2 draws real optical changes and comparison mode keeps CSS (1.0s)
+  ok  5 [chromium] › tests\browser\showcase.spec.mjs:133:1 › WebGL2 unavailable keeps the CSS fallback usable (326ms)
+  ok  6 [chromium] › tests\browser\showcase.spec.mjs:147:1 › reduced transparency pauses optics and restores the chosen renderer (645ms)
+  ok  7 [chromium] › tests\browser\showcase.spec.mjs:161:1 › invalid imported state is rejected without partially mutating settings (324ms)
+  ok  8 [chromium] › tests\browser\showcase.spec.mjs:173:1 › small viewport has no document overflow and arrow keys move the glass (343ms)
+  ok  9 [chromium] › tests\browser\showcase.spec.mjs:184:1 › exports use package tokens and failed clipboard does not claim success (325ms)
+  ok 10 [chromium] › tests\browser\showcase.spec.mjs:200:1 › forced colors disables optical rendering (325ms)
+  ok 11 [webkit] › tests\browser\showcase.spec.mjs:64:1 › standalone file works offline and creates both real maps (516ms)
+  ok 12 [webkit] › tests\browser\showcase.spec.mjs:77:1 › every preset has the same map bytes, profile and dim law as Azmoon (2.9s)
+  -  13 [webkit] › tests\browser\showcase.spec.mjs:88:1 › CSS backdrop pixels exactly match Azmoon across panel presets and surfaces
+  ok 14 [webkit] › tests\browser\showcase.spec.mjs:117:1 › WebGL2 draws real optical changes and comparison mode keeps CSS (1.9s)
+  ok 15 [webkit] › tests\browser\showcase.spec.mjs:133:1 › WebGL2 unavailable keeps the CSS fallback usable (510ms)
+  ok 16 [webkit] › tests\browser\showcase.spec.mjs:147:1 › reduced transparency pauses optics and restores the chosen renderer (1.3s)
+  ok 17 [webkit] › tests\browser\showcase.spec.mjs:161:1 › invalid imported state is rejected without partially mutating settings (501ms)
+  ok 18 [webkit] › tests\browser\showcase.spec.mjs:173:1 › small viewport has no document overflow and arrow keys move the glass (403ms)
+  ok 19 [webkit] › tests\browser\showcase.spec.mjs:184:1 › exports use package tokens and failed clipboard does not claim success (619ms)
+  ok 20 [webkit] › tests\browser\showcase.spec.mjs:200:1 › forced colors disables optical rendering (483ms)
+
+  1 skipped
+  19 passed (22.9s)
+Exit code: 0

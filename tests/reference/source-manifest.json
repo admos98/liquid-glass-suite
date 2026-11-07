@@ -1,0 +1,18 @@
+{
+  "sourceRepository": "https://github.com/admos98/Azmoonsaz",
+  "sourceCommit": "0fa31b94a86efb6390fd52f53d61b76464acf6bc",
+  "sourcePath": "tools/reference/playground",
+  "purpose": "Unmodified baseline for source/map and CSS pixel comparisons. Not the product showcase.",
+  "sha256": {
+    "tests/reference/azmoon/index.html": "5418e50116eb6fcbe1e3bab74cd3b7f7ba819df0cee6664943814608ee412b8d",
+    "tests/reference/azmoon/playground.js": "8e1d62095057b0b74d2857b286a03b9cc05da9617c348a364fadad5fece3263c",
+    "tests/reference/azmoon/assets/backgrounds/bg-d-dark.svg": "7dd234573e553ae5bd504791b07017da0121d770207abf21a22bd156f54db9d1",
+    "tests/reference/azmoon/assets/backgrounds/bg-d-light.svg": "5cde46b223ca55ddd5cd43657c0eb240d0d6d7d6da587ad34fc72caebd7d88e4",
+    "tests/reference/azmoon/assets/backgrounds/bg-e-dark.svg": "6143486905c474f51432c88dc5b653145ec47a8ff0b4ad2f59111b5d133a0c48",
+    "tests/reference/azmoon/assets/backgrounds/bg-e-light.svg": "58660a18dafc79ba6eded5c30ac2683e66a891abddf85e077f03d6104997086d",
+    "tests/reference/azmoon/assets/backgrounds/bg-f-dark.svg": "cc29758ee850ac0ca0a72715f82c0a8866c04fca64e575316e12347659026145",
+    "tests/reference/azmoon/assets/backgrounds/bg-f-light.svg": "b925de41d5099e9f20a65362a0cf03a1ade42c6161515a8a8641b7d5dec4537e",
+    "tests/reference/azmoon/assets/backgrounds/bg-g-dark.svg": "a6fb82c21d57c977aee7f63eb890ed50076d76c2ee55fd272262e1f633e1bedd",
+    "tests/reference/azmoon/assets/backgrounds/bg-g-light.svg": "910064aa3e934d3766b23afaf626b04f0ce0f9b79c4000faad0d8168c5513e01"
+  }
+}
