@@ -1,20 +1,27 @@
 # Verification
 
-Run from the package root:
+Run from the suite root:
 
 ```bash
 npm ci
 python -m pip install Pillow
-npx playwright install chromium webkit
 npm run verify
 ```
 
-`npm run verify` checks the standalone build, Python package/fixture contracts, and browser behavior. Actual output is recorded in `tests/evidence/verification.txt`.
+On an externally managed Python installation:
 
-The browser suite uses an unmodified Azmoon baseline shipped under `tests/reference/azmoon/`. Source hashes are in `tests/reference/source-manifest.json`. It compares map bytes and the isolated 800×400 CSS stage against the baseline, then exercises WebGL2, explicit fallback, imported-state validation, clipboard failure, mobile overflow, keyboard focus, and accessibility preferences.
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install Pillow
+.venv/bin/python -m unittest discover -s tests -v
+```
 
-CSS pixel parity runs in Chromium only. Playwright WebKit exercises the texture renderer and fallback; its SVG-backdrop parity case is intentionally skipped. Playwright WebKit on Windows is not a real-device Safari test. Native examples were not compiled on Apple hardware.
+The Playwright config uses the dev-only packaged Chromium runtime on Linux and extracts its bundled runtime libraries. For an installed system Playwright browser, use `PLAYWRIGHT_SYSTEM_CHROMIUM=1 npm test`; the usual setup is `npx playwright install chromium`.
 
-The synthetic map/rim/glow/cutout fixtures validate the measurement tools, not a browser. The current chroma output is in `tests/fixtures/chroma-retention.txt`; saturation now clamps channels, giving dark fixture retentions of 32% and 56% instead of the old unbounded 33% and 57%.
+`npm run verify` checks the standalone build, Python package/fixture contracts and Chromium behavior. The browser suite loads `shared/assets/showcase.html` directly through `file://` with networking offline. It checks both renderers, split mode, all eight owned plates, optical map properties, exact presets, atomic state, interaction, exports, accessibility preferences, mobile layout and visible fallbacks.
 
-No test result is implied by this document. The execution transcript is the evidence.
+The only screenshot assertions are the three suite-owned images in `tests/baselines/`, captured from the clean engine in Chromium 153 with software WebGL2. Update them deliberately with `npm test -- --update-snapshots` after an intended visual change, then run `npm test` without update mode. No external image or implementation is a comparison target.
+
+The synthetic map/rim/glow/cutout fixtures validate measurement tools, not a browser. The current chroma output is in `tests/fixtures/chroma-retention.txt`; saturation clamps channels.
+
+Actual output belongs in `tests/evidence/verification.txt`. An unavailable browser or CLI is reported as untested, never converted to a pass. Desktop Chromium is not a real-device Safari/iPhone check, and native examples are not native-runtime passes.

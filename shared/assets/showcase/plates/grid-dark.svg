@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<!-- Authored procedurally for Liquid Glass Suite, 2026. -->
+<rect width="960" height="540" fill="#0f172a"/>
+<path d="M0 0V540" stroke="#64748b55"/>
+<path d="M40 0V540" stroke="#64748b55"/>
+<path d="M80 0V540" stroke="#64748b55"/>
+<path d="M120 0V540" stroke="#64748b55"/>
+<path d="M160 0V540" stroke="#64748b55"/>
+<path d="M200 0V540" stroke="#64748b55"/>
+<path d="M240 0V540" stroke="#64748b55"/>
+<path d="M280 0V540" stroke="#64748b55"/>
+<path d="M320 0V540" stroke="#64748b55"/>
+<path d="M360 0V540" stroke="#64748b55"/>
+<path d="M400 0V540" stroke="#64748b55"/>
+<path d="M440 0V540" stroke="#64748b55"/>
+<path d="M480 0V540" stroke="#64748b55"/>
+<path d="M520 0V540" stroke="#64748b55"/>
+<path d="M560 0V540" stroke="#64748b55"/>
+<path d="M600 0V540" stroke="#64748b55"/>
+<path d="M640 0V540" stroke="#64748b55"/>
+<path d="M680 0V540" stroke="#64748b55"/>
+<path d="M720 0V540" stroke="#64748b55"/>
+<path d="M760 0V540" stroke="#64748b55"/>
+<path d="M800 0V540" stroke="#64748b55"/>
+<path d="M840 0V540" stroke="#64748b55"/>
+<path d="M880 0V540" stroke="#64748b55"/>
+<path d="M920 0V540" stroke="#64748b55"/>
+<path d="M960 0V540" stroke="#64748b55"/>
+<path d="M0 0H960" stroke="#64748b55"/>
+<path d="M0 40H960" stroke="#64748b55"/>
+<path d="M0 80H960" stroke="#64748b55"/>
+<path d="M0 120H960" stroke="#64748b55"/>
+<path d="M0 160H960" stroke="#64748b55"/>
+<path d="M0 200H960" stroke="#64748b55"/>
+<path d="M0 240H960" stroke="#64748b55"/>
+<path d="M0 280H960" stroke="#64748b55"/>
+<path d="M0 320H960" stroke="#64748b55"/>
+<path d="M0 360H960" stroke="#64748b55"/>
+<path d="M0 400H960" stroke="#64748b55"/>
+<path d="M0 440H960" stroke="#64748b55"/>
+<path d="M0 480H960" stroke="#64748b55"/>
+<path d="M0 520H960" stroke="#64748b55"/>
+<circle cx="130" cy="120" r="74" fill="#f43f5e" fill-opacity=".82"/>
+<circle cx="400" cy="330" r="110" fill="#06b6d4" fill-opacity=".82"/>
+<circle cx="720" cy="150" r="88" fill="#f59e0b" fill-opacity=".82"/>
+<circle cx="840" cy="420" r="58" fill="#8b5cf6" fill-opacity=".82"/>
+<circle cx="230" cy="440" r="48" fill="#f43f5e" fill-opacity=".82"/>
+</svg>

@@ -1,12 +1,12 @@
 # bare wash
-# $ python scripts/chroma-retention.py --in 240,232,210 --wash 0.35 --tint 31,29,41
+# $ python shared/scripts/chroma-retention.py --in 240,232,210 --wash 0.35 --tint 31,29,41
 input chroma 30.0
          input: (240.0, 232.0, 210.0)  chroma   30.0
      wash 0.35: (171.2, 167.4, 161.3)  chroma    9.9
 chroma retention: 33%   (target ~60-75%; <~40% = plastic/putty read)
 
 # sat-before-wash
-# $ python scripts/chroma-retention.py --in 240,232,210 --sat 1.4 --wash 0.30 --tint 31,29,41
+# $ python shared/scripts/chroma-retention.py --in 240,232,210 --sat 1.4 --wash 0.30 --tint 31,29,41
 input chroma 30.0
          input: (240.0, 232.0, 210.0)  chroma   30.0
        sat 1.4: (243.2, 232.0, 201.2)  chroma   42.0
@@ -14,7 +14,7 @@ input chroma 30.0
 chroma retention: 64%   (target ~60-75%; <~40% = plastic/putty read)
 
 # dark strong, fill 0.70
-# $ python scripts/chroma-retention.py --in 242,203,88 --sat 1.5 --wash 0.14 --tint 16,15,28 --fill 0.70 --fill-tint 16,15,28
+# $ python shared/scripts/chroma-retention.py --in 242,203,88 --sat 1.5 --wash 0.14 --tint 16,15,28 --fill 0.70 --fill-tint 16,15,28
 input chroma 154.0
          input: (242.0, 203.0, 88.0)  chroma  154.0
        sat 1.5: (255.0, 203.0, 30.5)  chroma  224.5
@@ -23,7 +23,7 @@ input chroma 154.0
 chroma retention: 32%   (target ~60-75%; <~40% = plastic/putty read)
 
 # dark strong, fill 0.52
-# $ python scripts/chroma-retention.py --in 242,203,88 --sat 1.5 --wash 0.14 --tint 16,15,28 --fill 0.52 --fill-tint 16,15,28
+# $ python shared/scripts/chroma-retention.py --in 242,203,88 --sat 1.5 --wash 0.14 --tint 16,15,28 --fill 0.52 --fill-tint 16,15,28
 input chroma 154.0
          input: (242.0, 203.0, 88.0)  chroma  154.0
        sat 1.5: (255.0, 203.0, 30.5)  chroma  224.5

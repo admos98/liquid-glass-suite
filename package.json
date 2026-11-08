@@ -1,11 +1,13 @@
 {
-  "name": "ultimate-liquid-glass",
-  "version": "1.1.0",
+  "name": "liquid-glass-suite",
+  "version": "2.0.0",
   "private": true,
-  "description": "A source-matched Liquid Glass skill with a standalone SVG/WebGL2 showcase and executable verification.",
+  "description": "Four task-focused Liquid Glass skills over a shared CSS/SVG/WebGL2 core, with recipes, measurement tools and executable verification.",
   "license": "MIT",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build:showcase": "node scripts/build-showcase.mjs",
     "check:showcase": "node scripts/build-showcase.mjs --check",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.61.0",
+    "@sparticuz/chromium": "153.0.0",
     "pngjs": "7.0.0"
   }
 }

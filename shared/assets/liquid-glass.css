@@ -1,0 +1,223 @@
+/*
+ * liquid-glass.css — the default application drop-in
+ *
+ * Assembled from shared/references/02-css-scaffold.md (layers + tokens),
+ * shared/references/12-tailwind-v4.md (plain-CSS theme colours),
+ * shared/references/03-dim-and-rim.md (production edge/dim guidance),
+ * shared/references/04-svg-filter-graph.md (backdrop-fed reflective rim), and
+ * shared/references/11-failure-catalogue.md (nested-glass de-nest).
+ * MIT — see LICENSE and NOTICE.
+ *
+ * Fallback is universal; bend is additive. A conservative Chromium gate enables
+ * the SVG backdrop path; other engines keep blur+saturate and the painted
+ * specular/bezel fallback. Syntax support alone is not a rendered-paint claim.
+ *
+ * Production and showcase share 1x maps, the highlight-weighted wash and the
+ * per-pixel SDF-gradient/vector-Snell core in liquid-glass.js. Maps and the
+ * directional specular mask are regenerated for the actual panel geometry.
+ *
+ * Layers:
+ *   substrate    .lg            blur() saturate() brightness()
+ *   refraction   .lg--backdrop  backdrop-filter ... url() LAST (Chromium gate)
+ *                .lg--lens      content/owned-source filter ... url() LAST
+ *   optical rim  SVG graph      saturated displaced backdrop × specular map
+ *   fallback rim .lg + ::before painted specular/bezel when bend is unavailable
+ *   sheen        .lg::after     static radial light; removed for reduced motion
+ */
+
+:root {
+  --lg-lens: var(--lg-lens-light);
+  --lg-fill: rgba(255, 255, 255, 0.08);
+  --lg-fill-strong: rgba(252, 252, 252, 0.32);
+  --lg-fill-dark: rgba(34, 30, 74, 0.65);
+  --lg-fill-flat: rgba(255, 255, 255, 0.72);
+  --lg-blur: 2px;
+  --lg-sat: 180%;
+  --lg-bright: 1.08;
+  --lg-border: rgba(255, 255, 255, 0.28);
+  --lg-radius: 20px;
+  --lg-rim-top: rgba(255, 255, 255, 0.55);
+  --lg-rim-side: rgba(255, 255, 255, 0.25);
+  --lg-rim-bottom: rgba(0, 0, 0, 0.10);
+  --lg-edge-t: clamp(1.5px, 4.2%, 3.6px);
+  --lg-edge-base: 0.5;
+  --lg-edge-hot: 0.55;
+  --lg-edge-spread: 38%;
+  --lg-edge-color: 255 255 255;
+  --lg-sheen-alpha: 0.14;
+  --lg-ink: #221E4A;
+  --lg-text-on-dark: #F8FAFC;
+}
+
+/* Dark tokens. The two selectors are intentionally separate: an explicit
+   data-theme wins over the OS preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --lg-lens: var(--lg-lens-dark);
+    --lg-fill: rgba(34, 30, 74, 0.65);
+    --lg-fill-strong: rgba(34, 30, 74, 0.88);
+    --lg-fill-dark: rgba(16, 15, 28, 0.88);
+    --lg-fill-flat: rgba(34, 30, 74, 0.88);
+    --lg-sat: 140%;
+    --lg-border: rgba(255, 255, 255, 0.08);
+    --lg-rim-top: rgba(255, 255, 255, 0.06);
+    --lg-rim-side: rgba(255, 255, 255, 0.06);
+    --lg-edge-t: clamp(1.25px, 3.1%, 2.6px);
+    --lg-edge-base: 0.26;
+    --lg-edge-hot: 0.3;
+    --lg-edge-spread: 72%;
+    --lg-sheen-alpha: 0.06;
+    --lg-ink: #F8FAFC;
+  }
+}
+
+:root[data-theme='dark'] {
+  --lg-lens: var(--lg-lens-dark);
+  --lg-fill: rgba(34, 30, 74, 0.65);
+  --lg-fill-strong: rgba(34, 30, 74, 0.88);
+  --lg-fill-dark: rgba(16, 15, 28, 0.88);
+  --lg-fill-flat: rgba(34, 30, 74, 0.88);
+  --lg-sat: 140%;
+  --lg-border: rgba(255, 255, 255, 0.08);
+  --lg-rim-top: rgba(255, 255, 255, 0.06);
+  --lg-rim-side: rgba(255, 255, 255, 0.06);
+  --lg-edge-t: clamp(1.25px, 3.1%, 2.6px);
+  --lg-edge-base: 0.26;
+  --lg-edge-hot: 0.3;
+  --lg-edge-spread: 72%;
+  --lg-sheen-alpha: 0.06;
+  --lg-ink: #F8FAFC;
+}
+
+/* Carrier + layer 2 (specular). No resting drop shadow: transparent glass
+   cannot cast one, and a shadow on dark glass is the moulded-plastic cue. */
+.lg {
+  position: relative;
+  isolation: isolate;
+  background: var(--lg-fill);
+  color: var(--lg-ink);
+  border: 1px solid var(--lg-border);
+  border-radius: var(--lg-radius);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat)) brightness(var(--lg-bright));
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat)) brightness(var(--lg-bright));
+  box-shadow:
+    inset 0 1px 1px -0.5px var(--lg-rim-top),
+    inset 1px 0 1px -1px var(--lg-rim-side),
+    inset -1px 0 1px -1px var(--lg-rim-side),
+    inset 0 -1px 1px -0.5px var(--lg-rim-bottom);
+}
+
+.lg-strong { background: var(--lg-fill-strong); }
+.lg-dark { background: var(--lg-fill-dark); color: var(--lg-text-on-dark); }
+.lg-inset {
+  background: var(--lg-fill);
+  box-shadow: inset 0 1px 1px -0.5px var(--lg-rim-top),
+              inset 0 -1px 1px -0.5px var(--lg-rim-bottom);
+}
+/* Inputs are concave wells, not rimmed floating panels. */
+.lg-inset::before, .lg-inset::after { display: none; }
+
+/* Layer 3: bezel — one ::before per element. */
+.lg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.15) 30%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.1) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Layer 4: static sheen for the material/fallback dress. Reduced motion removes
+   it; the independently authored JS pointer transform needs no CSS variables. */
+.lg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(600px circle at var(--eg-x, 70%) var(--eg-y, 0%),
+    rgb(var(--lg-edge-color) / calc(var(--lg-sheen-alpha) * var(--eg-boost, 1))),
+    transparent 40%);
+}
+
+/* Strategy 1 — filter on CONTENT. Works in Chrome, Safari, Firefox.
+   url() LAST: a blur after url() erases the displacement. */
+[data-lg-refraction='lens'] .lg--lens,
+[data-lg-refraction='backdrop'] .lg--lens {
+  filter: blur(var(--lg-blur)) saturate(var(--lg-sat)) var(--lg-lens);
+}
+
+/* Strategy 2 — Chromium only after the conservative version and syntax gate.
+   The base .lg rule above stays intact; a real paint check is still required. */
+[data-lg-refraction='backdrop'] .lg--backdrop {
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat)) var(--lg-lens);
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat)) var(--lg-lens);
+}
+
+/* When the optical ring is live, remove its painted stand-ins so they cannot
+   double the rim. The fill and pointer sheen retain their separate jobs. */
+[data-lg-refraction='backdrop'] .lg--backdrop {
+  border-color: transparent;
+  box-shadow: none;
+}
+[data-lg-refraction='backdrop'] .lg--backdrop::before { display: none; }
+
+/* One-selector de-nest: a backdrop-filter ancestor is a backdrop root.
+   Nested glass samples the parent's flat fill and stacks translucency
+   (0.62 + 0.62 ~= 0.86 opaque milk). */
+.lg .lg {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  filter: none;
+  background: var(--lg-fill-flat);
+}
+
+/* Squircles are an enhancement, never a dependency. */
+@supports (corner-shape: squircle) {
+  .lg { corner-shape: squircle; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg::after { background: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .lg {
+    background: var(--lg-fill-flat);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  [data-lg-refraction='lens'] .lg--lens,
+  [data-lg-refraction='backdrop'] .lg--lens { filter: none; }
+  [data-lg-refraction='backdrop'] .lg--backdrop {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .lg {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .lg::before, .lg::after { display: none; }
+  [data-lg-refraction='lens'] .lg--lens,
+  [data-lg-refraction='backdrop'] .lg--lens { filter: none; }
+  [data-lg-refraction='backdrop'] .lg--backdrop {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
