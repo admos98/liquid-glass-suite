@@ -19,7 +19,7 @@ for (const plate of ['d', 'e', 'f', 'g']) {
 }
 const header = 'const ULG_PLATES = ' + JSON.stringify(images) + ';\n';
 const script = header + optics + '\n' + renderer + '\n' + controller;
-new vm.Script(script, { filename: 'ultimate-liquid-glass-showcase.js' });
+new vm.Script(script, { filename: 'liquid-glass-suite-showcase.js' });
 const marker = '<!-- ULTIMATE_LIQUID_GLASS_RUNTIME -->';
 if (template.split(marker).length !== 2) throw new Error('The showcase template must contain one runtime marker.');
 const html = template.replace(marker, '<script>\n' + script.replaceAll('</script', '<\\/script') + '\n</script>');
