@@ -12,9 +12,9 @@
  * the SVG backdrop path; other engines keep blur+saturate and the painted
  * specular/bezel fallback. Syntax support alone is not a rendered-paint claim.
  *
- * Production and showcase share 1x maps, the highlight-weighted wash and the
- * per-pixel SDF-gradient/vector-Snell core in liquid-glass.js. Maps and the
- * directional specular mask are regenerated for the actual panel geometry.
+ * Default drop-in: the original strategy-1 1x SVG lens and capability gate in
+ * liquid-glass.js. The standalone showcase separately preserves its original
+ * 2x displacement/specular maps and historical dim; production wash is separate.
  *
  * Layers:
  *   substrate    .lg            blur() saturate() brightness()

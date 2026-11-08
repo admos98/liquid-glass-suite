@@ -1,8 +1,8 @@
-# Eval 06: Verify clean optical properties
+# Eval 06: Verify the standalone original optics
 
 ## User prompt
 
-Tune this Liquid Glass panel without copying another demo. Prove the center is undistorted, the bezel refracts, and the rim responds to light direction.
+Keep the original standalone Liquid Glass showcase behavior. Verify its presets, map geometry, refraction, and directional rim without replacing the engine.
 
 ## Skill that should trigger
 
@@ -10,8 +10,8 @@ Tune this Liquid Glass panel without copying another demo. Prove the center is u
 
 ## Expected behavior
 
-- Uses the clean SDF-gradient/vector-Snell core and regenerates maps for actual panel geometry.
-- Records renderer, browser, geometry, optical settings, owned background and DPR.
-- Measures center neutrality, edge growth, vector symmetry, flat interior and directional specular presence/absence.
-- Uses suite-owned visual baselines only and names every unrun browser or real-device check.
-- Preserves the shared highlight-weighted wash and readable fallback instead of introducing external parameter bundles.
+- Uses the restored original profile/displacement/specular builders and does not substitute another optical engine.
+- Records renderer, browser, geometry, original optical settings, background, and DPR.
+- Checks all seven original bundles and requires map dimensions of 2× CSS geometry.
+- Exercises surfaces, controls, both renderers, split mode, interaction, exports, and accessible fallbacks.
+- Uses no external comparison target and names every unrun browser or real-device check.

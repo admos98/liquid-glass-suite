@@ -1,46 +1,44 @@
 ---
 name: liquid-glass-optics
-description: Use for Liquid Glass rendering strategy, per-pixel SDF displacement/specular maps, backdrop-filter url(), WebGL2 refraction, Safari true-refraction options, reflective rims, clean-room showcase tuning, and mathematical optical verification.
+description: Use for Liquid Glass rendering strategy, original SVG displacement/specular maps, backdrop-filter url(), WebGL2 refraction, Safari true-refraction options, reflective rims, standalone showcase tuning, and optical behavior verification.
 ---
 
 # Liquid Glass optics
 
-Open [`../../shared/assets/showcase.html`](../../shared/assets/showcase.html) directly from disk for interactive renderer and optics work. It runs offline with owned plates, seven product presets and editable source in `../../shared/assets/showcase/`.
+Open [`../../shared/assets/showcase.html`](../../shared/assets/showcase.html) directly from disk. It is the restored original standalone showcase: no server, build, network, framework, or external assets are needed. Editable optics, controller, template, plates, and lineage manifest are in `../../shared/assets/showcase/`.
 
-## One clean model
+## Restored original model
 
-The showcase and default drop-in share the field in `../../shared/assets/liquid-glass.js`: evaluate a rounded-rectangle signed-distance field per pixel, take its analytic gradient, derive slope from a mathematical height family, and apply three-component vector Snell refraction. A cubic directional lobe and linear rim window create specular light. Both renderers use one bitmap pixel per CSS pixel and the highlight-weighted wash.
+The showcase preserves its original surface profile, Snell-derived displacement map, directional specular map, seven preset bundles, 2× map sampling, and historical linear RGB dim. The default drop-in retains its separate strategy-1 SVG lens/capability-gate implementation. Do not substitute the removed clean-room SDF engine or its presets.
 
-Do not introduce profile lookup sweeps, external parameter bundles, or resemblance targets. Constants and presets need an independent derivation. `../../PROVENANCE.md` records origins and credit.
+Standalone describes offline packaging, not independent authorship. Attribution and the inherited-code license boundary are in `../../NOTICE` and `../../PROVENANCE.md`.
 
 ## Route the problem
 
 | Need | Read |
 |---|---|
 | Content filter vs SVG backdrop vs WebGL2 vs frost | `../../shared/references/01-strategy-picker.md` |
-| SDF maps, specular masking, SVG graph and fresh IDs | `../../shared/references/04-svg-filter-graph.md` |
-| Wash, rim weighting, theme tokens, geometry faults | `../../shared/references/03-dim-and-rim.md` |
-| WebGL2 API, explicit textures, hybrid swap and cleanup | `../../shared/references/07-webgl-shader.md` |
-| Controls, exact presets, exports and diagnostic API | `../../shared/references/14-showcase.md` |
+| Original displacement/specular maps and SVG graph | `../../shared/references/04-svg-filter-graph.md` |
+| Production wash, rim weighting, theme tokens, geometry faults | `../../shared/references/03-dim-and-rim.md` |
+| Original WebGL2 API, explicit textures, hybrid swap and cleanup | `../../shared/references/07-webgl-shader.md` |
+| Standalone controls, exact original presets, exports and diagnostic API | `../../shared/references/14-showcase.md` |
 | Safari URL-filter wall, caches, compositing and OS-material conflict | `../../shared/references/06-safari-webkit.md` |
 | Map budgets, idle/viewport gates, scroll synchronization | `../../shared/references/08-performance.md` |
 | Transform arming, filter-carrier motion and origin | `../../shared/references/09-motion.md` |
 
 ## Two application paths only
 
-1. **Default:** `../../shared/assets/liquid-glass.css` + `.js`, normally through `liquid-glass`. The conservative gate adds optics only where the SVG backdrop can paint; fallback remains usable.
+1. **Default:** `../../shared/assets/liquid-glass.css` + `.js`, normally through `liquid-glass`. Its strategy-1 lens and conservative gate add optics only where supported; fallback remains usable.
 2. **WebGL2:** use `../../shared/assets/webgl-glass.js` with an explicit origin-clean image/canvas/video texture or a WebKit true-refraction brief. It cannot read arbitrary DOM. Paint below content and restore CSS on failure/teardown.
 
-The renderer is `window.LiquidGlassRenderer`. Shared maps are required; cross-renderer pixel identity is not.
+The standalone renderer global is `window.UltimateLiquidGlassRenderer`; its diagnostic page API is `window.UltimateLiquidGlass`. Shared maps do not prove cross-renderer pixel identity.
 
-## Verify optical properties
+## Verify the restored behavior
 
-1. Record renderer, browser, surface, width, height, radius, bezel, scale, light angle/strength, saturation, dim, background and DPR.
-2. Probe center neutrality, near-edge growth, 180-degree vector symmetry, flat interior, and light-facing/opposite specular samples for every relevant surface.
-3. Regenerate maps for actual geometry and use fresh filter IDs. Keep `url()` last in CSS backdrop chains.
-4. Test real drawing and visible fallback. Use only suite-owned screenshots for visual regression; never infer a bend from labels or a vision description.
-
-From the suite root:
+1. Record renderer, browser, surface, width, height, radius, bezel, scale, light angle/opacity/saturation, dim, background, and DPR.
+2. Check the seven original preset bundles exactly and require map dimensions of 2× CSS geometry.
+3. Exercise every surface/control, real CSS/SVG and WebGL2 drawing, split mode, pointer/keyboard/reset, URL/state validation, exports, and fallbacks.
+4. Test center R/G neutrality and actual optical changes without using an external comparison implementation. Do not infer paint from labels or syntax support.
 
 ```sh
 node scripts/build-showcase.mjs --check

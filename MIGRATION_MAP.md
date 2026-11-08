@@ -2,6 +2,21 @@
 
 Development record only; runtime skills do not require this file. The historical product name appears here solely to identify the source tree. This map was written before any file move.
 
+## Standalone restoration addendum (2026-11-07)
+
+This addendum supersedes the clean-room addendum for the current tree. The owner requested the original engine back with standalone packaging/reference text. Historical clean-room entries below remain development history only.
+
+| Clean-room-era path | Current restoration |
+|---|---|
+| `shared/assets/showcase/optics.js` | Original engine restored from pre-restructure source; standalone header/branding only. |
+| `shared/assets/showcase/controller.js`, `template.html` | Original adapter/UI restored; current `shared/` reference paths and standalone labels. |
+| `shared/assets/webgl-glass.js`, `liquid-glass.js` | Original WebGL2 renderer and strategy-1 drop-in restored. |
+| `shared/assets/showcase/plates/`, `presets.json` | Removed with the clean-room engine. |
+| `shared/assets/showcase/backgrounds/`, `source-manifest.json` | Eight original plates and lineage manifest restored. |
+| `shared/assets/showcase.html` | Regenerated from restored original sources. |
+| `tests/browser/optics.spec.mjs`, `tests/baselines/` | Removed; replaced by original-behavior tests in `tests/browser/showcase.spec.mjs` with no external comparison target. |
+| `PROVENANCE.md`, `NOTICE`, `README.md`, `shared/references/` | Current standalone/original-lineage documentation; earlier independent-authorship claims withdrawn. |
+
 ## Clean-room addendum (written before the 2026-11-07 replacement)
 
 This addendum supersedes earlier replica-preservation and unresolved-inherited-code decisions. The old implementation and comparison artifacts are not retained in new “reference” folders.

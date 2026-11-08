@@ -1,0 +1,23 @@
+{
+  "origin": "Azmoonsaz reference playground by Moslem Adib",
+  "originCommit": "0fa31b94a86efb6390fd52f53d61b76464acf6bc",
+  "originSourceSHA256": "8e1d62095057b0b74d2857b286a03b9cc05da9617c348a364fadad5fece3263c",
+  "preserved": [
+    "surface functions",
+    "Snell profile",
+    "displacement map",
+    "specular map",
+    "preset values",
+    "historical linear RGB dim",
+    "SVG blend graph"
+  ],
+  "adapter": [
+    "offline artwork",
+    "WebGL2",
+    "keyboard/drag controls",
+    "renderer choice",
+    "safe export",
+    "capability gate",
+    "branding"
+  ]
+}

@@ -19,7 +19,7 @@ if (process.env.PLAYWRIGHT_SYSTEM_CHROMIUM !== '1') {
 export default defineConfig({
   testDir: './tests/browser',
   outputDir: './test-results',
-  snapshotPathTemplate: 'tests/baselines/{arg}{ext}',
+  // No external or committed pixel baselines; tests compare behavior and in-session optical changes.
   reporter: 'list',
   workers: 1,
   fullyParallel: false,
