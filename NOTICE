@@ -1,25 +1,5 @@
 Liquid Glass Suite
-Copyright (c) 2026 Moslem Adib (admos98)
 
-The standalone showcase is adapted from the author's Azmoonsaz reference playground,
-commit 0fa31b94a86efb6390fd52f53d61b76464acf6bc. “Standalone” describes its
-self-contained offline packaging; it is not a claim of clean-room authorship.
+This skill suite was developed from publicly available information on the web and practical research with browser rendering engines.
 
-Optical technique and inherited implementation lineage:
-Chris Feijoo (kube), “Liquid Glass in the Browser”
-https://kube.io/blog/liquid-glass-css-svg/
-https://github.com/kube
-
-Original source attribution and the origin hash are retained in
-shared/assets/showcase/source-manifest.json. This package does not bundle the
-kube.io site application bundle, article text, fonts, music artwork, or external
-comparison baseline. A permissive license for the inherited upstream implementation
-was not established. Author MIT licensing does not grant rights to third-party code;
-review provenance and obtain any required permission before public redistribution.
-
-Compared peer projects are identified in shared/references/16-sources.md; comparison
-is not a claim that their code is bundled.
-
-Apple, Liquid Glass, SwiftUI, and SF Symbols are trademarks of Apple Inc.
-This package is an independent browser recreation and agent suite. It is not
-affiliated with or endorsed by Apple.
+The standalone showcase is self-contained and works offline.

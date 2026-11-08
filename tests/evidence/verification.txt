@@ -1,6 +1,7 @@
-Liquid Glass Suite — restored original standalone verification
+Liquid Glass Suite — standalone verification
 Date (UTC): 2026-11-07
 Branch: arena/91d49831-ultimate-liquid-glass
+Notice: neutral public-web and browser-engine research wording; named source references removed.
 Browser: Chromium 153.0.8010.0; software WebGL2
 Node: v22.22.3
 Python: Python 3.11.2; Pillow 13.0.0
@@ -28,16 +29,16 @@ test_warm_cream_retention_matches_the_documented_fixture (test_package.Measureme
 test_default_scaffold_has_original_strategy_one_optics (test_package.PackageContract.test_default_scaffold_has_original_strategy_one_optics) ... ok
 test_general_cap_and_webkit_budget_are_explicit (test_package.PackageContract.test_general_cap_and_webkit_budget_are_explicit) ... ok
 test_native_rules_do_not_force_unintended_shape_merging (test_package.PackageContract.test_native_rules_do_not_force_unintended_shape_merging) ... ok
+test_neutral_development_notice_and_original_artifacts (test_package.PackageContract.test_neutral_development_notice_and_original_artifacts) ... ok
 test_reference_set_recipes_and_evals_are_complete (test_package.PackageContract.test_reference_set_recipes_and_evals_are_complete) ... ok
 test_shipped_internal_references_resolve (test_package.PackageContract.test_shipped_internal_references_resolve) ... ok
 test_showcase_is_self_contained_and_suite_branded (test_package.PackageContract.test_showcase_is_self_contained_and_suite_branded) ... ok
 test_showcase_preset_table_exactly_matches_original_bundles (test_package.PackageContract.test_showcase_preset_table_exactly_matches_original_bundles) ... ok
 test_skill_byte_budgets_are_acceptance_criteria (test_package.PackageContract.test_skill_byte_budgets_are_acceptance_criteria) ... ok
 test_skill_names_plugin_and_marketplace_match_the_installable_suite (test_package.PackageContract.test_skill_names_plugin_and_marketplace_match_the_installable_suite) ... ok
-test_standalone_restoration_preserves_original_artifacts (test_package.PackageContract.test_standalone_restoration_preserves_original_artifacts) ... ok
 
 ----------------------------------------------------------------------
-Ran 16 tests in 0.232s
+Ran 16 tests in 0.272s
 
 OK
 
@@ -47,28 +48,29 @@ OK
 
 Running 11 tests using 1 worker
 
-  ✓   1 [chromium] › tests/browser/showcase.spec.mjs:43:1 › standalone file works offline and creates original 2x maps (813ms)
-  ✓   2 [chromium] › tests/browser/showcase.spec.mjs:59:1 › all seven original preset buttons apply their complete original bundles (2.9s)
-  ✓   3 [chromium] › tests/browser/showcase.spec.mjs:70:1 › surface families, live controls and diagnostic canvases remain functional (3.1s)
-  ✓   4 [chromium] › tests/browser/showcase.spec.mjs:97:1 › original plates and generated background work without external assets (3.0s)
+  ✓   1 [chromium] › tests/browser/showcase.spec.mjs:43:1 › standalone file works offline and creates original 2x maps (723ms)
+  ✓   2 [chromium] › tests/browser/showcase.spec.mjs:59:1 › all seven original preset buttons apply their complete original bundles (2.7s)
+  ✓   3 [chromium] › tests/browser/showcase.spec.mjs:70:1 › surface families, live controls and diagnostic canvases remain functional (3.2s)
+  ✓   4 [chromium] › tests/browser/showcase.spec.mjs:97:1 › original plates and generated background work without external assets (2.9s)
   ✓   5 [chromium] › tests/browser/showcase.spec.mjs:108:1 › WebGL2 draws optical changes and comparison mode keeps CSS alive (2.5s)
   ✓   6 [chromium] › tests/browser/showcase.spec.mjs:122:1 › WebGL2 unavailable keeps a visible CSS fallback (1.2s)
-  ✓   7 [chromium] › tests/browser/showcase.spec.mjs:133:1 › reduced transparency pauses draws and restores the requested renderer (1.4s)
-  ✓   8 [chromium] › tests/browser/showcase.spec.mjs:146:1 › forced colors and reduced motion retain accessible CSS behavior (362ms)
-  ✓   9 [chromium] › tests/browser/showcase.spec.mjs:154:1 › invalid imported state is rejected atomically and valid URL state restores (1.1s)
-  ✓  10 [chromium] › tests/browser/showcase.spec.mjs:167:1 › pointer, keyboard, reset, mobile overflow and visible focus still work (769ms)
-  ✓  11 [chromium] › tests/browser/showcase.spec.mjs:183:1 › exports use package tokens and clipboard failure is honest (430ms)
+  ✓   7 [chromium] › tests/browser/showcase.spec.mjs:133:1 › reduced transparency pauses draws and restores the requested renderer (1.5s)
+  ✓   8 [chromium] › tests/browser/showcase.spec.mjs:146:1 › forced colors and reduced motion retain accessible CSS behavior (417ms)
+  ✓   9 [chromium] › tests/browser/showcase.spec.mjs:154:1 › invalid imported state is rejected atomically and valid URL state restores (1.5s)
+  ✓  10 [chromium] › tests/browser/showcase.spec.mjs:167:1 › pointer, keyboard, reset, mobile overflow and visible focus still work (470ms)
+  ✓  11 [chromium] › tests/browser/showcase.spec.mjs:183:1 › exports use package tokens and clipboard failure is honest (410ms)
 
-  11 passed (18.5s)
+  11 passed (18.3s)
 
 Additional checks:
+Named source/research reference audit: PASS (no matches).
 node --check shared/assets/liquid-glass.js: PASS
 node --check shared/assets/webgl-glass.js: PASS
 node --check shared/assets/showcase/optics.js: PASS
 node --check shared/assets/showcase/controller.js: PASS
 git diff --check: PASS
-Showcase bytes: 283276
-Showcase SHA-256: 5b95a11e572d84036b1bb675e593d4a26bd15c5978faff9f76c910349ef9f93b
+Showcase bytes: 283045
+Showcase SHA-256: a274fb5977d07f92f745a48d2e2bb2cc138217787c2c80343ed582be0e67cfa7
 Contract: C01-C15 PASS; no external comparison target or committed pixel baseline.
 Claude CLI validation: NOT RUN (CLI unavailable).
 Real Safari/iPhone and native Apple runtimes: NOT RUN.

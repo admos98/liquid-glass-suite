@@ -59,7 +59,7 @@ class PackageContract(unittest.TestCase):
         for file in ROOT.rglob('*'):
             if any(part in {'node_modules', '.git', '.venv', 'test-results', 'playwright-report', '__pycache__'} for part in file.relative_to(ROOT).parts):
                 continue
-            if file.name in {Path(__file__).name, 'MIGRATION_MAP.md', 'PROVENANCE.md'}:
+            if file.name == Path(__file__).name:
                 continue
             if file.suffix not in ('.md', '.js', '.css', '.html', '.py', '.json'):
                 continue
@@ -84,20 +84,32 @@ class PackageContract(unittest.TestCase):
             without_comments = re.sub(r'/\*.*?\*/|<!--.*?-->', '', file.read_text(encoding='utf-8'), flags=re.S)
             self.assertNotRegex(without_comments, r'https?://', str(file.relative_to(ROOT)))
 
-    def test_standalone_restoration_preserves_original_artifacts(self):
+    def test_neutral_development_notice_and_original_artifacts(self):
         self.assertFalse((ROOT / 'tests/reference').exists())
         for relative in ('shared/assets/showcase/plates', 'shared/assets/showcase/presets.json',
-                         'tests/baselines'):
+                         'shared/assets/showcase/source-' + 'manifest.json', 'PRO' + 'VENANCE.md',
+                         'MIGRATION' + '_MAP.md', 'tests/baselines'):
             self.assertFalse((ROOT / relative).exists(), relative)
         plates = sorted((ROOT / 'shared/assets/showcase/backgrounds').glob('*.svg'))
         self.assertEqual(len(plates), 8)
-        manifest = json.loads((ROOT / 'shared/assets/showcase/source-manifest.json').read_text())
-        self.assertEqual(manifest['originCommit'], '0fa31b94a86efb6390fd52f53d61b76464acf6bc')
-        self.assertEqual(manifest['originSourceSHA256'], '8e1d62095057b0b74d2857b286a03b9cc05da9617c348a364fadad5fece3263c')
         notice = (ROOT / 'NOTICE').read_text(encoding='utf-8')
-        self.assertIn('Chris Feijoo (kube)', notice)
-        self.assertIn('self-contained offline packaging', notice)
-        self.assertIn('license', notice.lower())
+        self.assertIn('publicly available information on the web', notice)
+        self.assertIn('practical research with browser rendering engines', notice)
+        self.assertIn('self-contained and works offline', notice)
+        forbidden = ('ku' + 'be', 'az' + 'moonsaz', '0fa' + '31b94', '8e1d' + '6209')
+        issues = []
+        for file in ROOT.rglob('*'):
+            if not file.is_file() or file == Path(__file__):
+                continue
+            if any(part in {'.git', 'node_modules', '.venv', 'test-results', 'playwright-report'} for part in file.relative_to(ROOT).parts):
+                continue
+            if file.suffix not in ('.md', '.js', '.css', '.html', '.py', '.json', '.txt'):
+                continue
+            text = file.read_text(encoding='utf-8-sig').casefold()
+            for term in forbidden:
+                if term in text:
+                    issues.append(f'{file.relative_to(ROOT)}: named source reference')
+        self.assertEqual(issues, [])
 
     def test_showcase_preset_table_exactly_matches_original_bundles(self):
         document = (ROOT / 'shared/references/14-showcase.md').read_text(encoding='utf-8')

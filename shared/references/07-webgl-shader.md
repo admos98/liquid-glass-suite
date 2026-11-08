@@ -12,7 +12,7 @@ Map pixels and dim parameters come from the source builders. CSS/SVG retains the
 
 The renderer does not implement chromatic dispersion, Fresnel-Schlick, Beer absorption, caustics, or ACES. Those are alternative optical models, not features hidden in this package. Add them only if the brief wants a different material; they require a separate behavior and verification contract.
 
-Call contract: `shared/references/14-showcase.md`. Migration: `MIGRATION_MAP.md`.
+Call contract and standalone packaging: `shared/references/14-showcase.md`.
 
 ## Production hybrid contract
 

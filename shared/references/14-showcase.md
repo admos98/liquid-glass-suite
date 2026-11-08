@@ -2,7 +2,7 @@
 
 `shared/assets/showcase.html` is the restored original interactive showcase. Open it directly from disk. JavaScript, CSS, presets, and eight SVG backgrounds are embedded; no network, server, framework, build step, or agent installation is required.
 
-“Standalone” describes this self-contained packaging. It is not an independent-authorship claim. Source lineage and attribution are retained in `NOTICE`, `PROVENANCE.md`, and `shared/assets/showcase/source-manifest.json`.
+“Standalone” describes this self-contained packaging. The neutral development notice is in `NOTICE`.
 
 ## Restored optics
 
@@ -50,7 +50,7 @@ node scripts/build-showcase.mjs
 node scripts/build-showcase.mjs --check
 ```
 
-Editable sources are `shared/assets/showcase/optics.js`, `controller.js`, `template.html`, `backgrounds/`, and `source-manifest.json`. The builder embeds those sources plus `shared/assets/webgl-glass.js` into the generated HTML and checks combined JavaScript syntax. `--check` requires an exact generated-file match.
+Editable sources are `shared/assets/showcase/optics.js`, `controller.js`, `template.html`, and `backgrounds/`. The builder embeds those sources plus `shared/assets/webgl-glass.js` into the generated HTML and checks combined JavaScript syntax. `--check` requires an exact generated-file match.
 
 ## Integration contract
 

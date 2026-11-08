@@ -1,6 +1,6 @@
 /*
  * Liquid Glass Suite standalone showcase adapter.
- * Source optics: shared/assets/showcase/optics.js. Attribution: NOTICE.
+ * Source optics: shared/assets/showcase/optics.js. Development notice: NOTICE.
  * Both renderers consume the original mapInfo and specular pixels. CSS retains
  * the original SVG graph; WebGL2 evaluates the same blur, displacement, rim,
  * historical linear dim and specular blends. Fallback remains available.

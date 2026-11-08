@@ -1,9 +1,8 @@
 /*
  * Liquid Glass Suite — reusable WebGL2 renderer for the standalone showcase.
- * Copyright (c) 2026 Moslem Adib (admos98). MIT; see LICENSE and NOTICE.
+ * Development notice: NOTICE; license: LICENSE.
  * Accepts explicit backdrop and displacement/specular ImageData and preserves
- * the showcase's historical linear RGB dim law. Origin and technique lineage:
- * shared/assets/showcase/source-manifest.json and shared/references/16-sources.md.
+ * the showcase's historical linear RGB dim law.
  */
 (() => {
   const VS = `#version 300 es

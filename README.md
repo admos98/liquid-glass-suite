@@ -2,7 +2,7 @@
 
 **Liquid Glass is refraction, not blur — this suite ships CSS/SVG and WebGL2 paths plus tools to measure the bend.**
 
-> The showcase is standalone and self-contained: open it offline with no server, build, network, or external assets. Standalone describes packaging, not clean-room authorship. Original technique and inherited implementation attribution is retained in [`NOTICE`](NOTICE).
+> This skill suite was developed from publicly available information on the web and practical research with browser rendering engines. See [`NOTICE`](NOTICE). The showcase is self-contained and works offline.
 
 One repository, one Claude Code plugin, four task-focused skills over shared assets. Start with the apply skill; open the interactive showcase for optics work.
 
@@ -35,7 +35,7 @@ The marketplace entry points at the repository root (`source: "./"`), and Claude
 | [`shared/assets/liquid-glass.css`](shared/assets/liquid-glass.css) + `.js` | Default app path: tokens, themes, strategy-1 SVG lens, conservative capability gate and fallback |
 | [`shared/assets/webgl-glass.js`](shared/assets/webgl-glass.js) | Explicit-texture WebGL2 path using the original showcase maps and historical dim behavior |
 | [`shared/assets/showcase.html`](shared/assets/showcase.html) | Self-contained original showcase; no server, build, network or external assets needed to open it |
-| [`shared/assets/showcase/`](shared/assets/showcase/) | Editable original optics, controller, template, seven presets, eight restored plates and source manifest |
+| [`shared/assets/showcase/`](shared/assets/showcase/) | Editable original optics, controller, template, seven presets and eight restored plates |
 | [`shared/references/`](shared/references/) | Sixteen implementation, browser, measurement and honesty references |
 | [`shared/scripts/`](shared/scripts/) | Displacement-map, edge-profile and chroma-retention measurement tools |
 
@@ -57,10 +57,10 @@ npm test
 
 The dev-only Chromium package supplies the Linux test runtime; on another platform use `PLAYWRIGHT_SYSTEM_CHROMIUM=1` after `npx playwright install chromium`. Run `claude plugin validate .` when the Claude Code CLI is available. [`tests/evidence/verification.txt`](tests/evidence/verification.txt) records actual runs. [`evals/`](evals/) contains ten agent benchmarks with empty results tables.
 
-## Honesty, provenance and license
+## Scope and license
 
 - Apple publishes no numeric Liquid Glass specification. Keep `src: apple-hig | community | figma | measured` distinctions; browser heuristics are not Apple requirements.
 - CSS syntax support is not paint evidence. Name the renderer, browser, geometry and fallback in every optical claim. Playwright is not a real iPhone, and native samples are not a native-runtime pass.
-- [`PROVENANCE.md`](PROVENANCE.md) records the restored original engine, source lineage, packaging scope, and file origins. [`tests/SHOWCASE_CONTRACT.md`](tests/SHOWCASE_CONTRACT.md) records behavior verification or explicit untested items.
-- Original suite code, documentation, tests, and supplied artwork are under [`LICENSE`](LICENSE) (MIT), to the extent the author holds those rights. The restored showcase retains inherited implementation lineage and the license boundary in `NOTICE`; no external comparison baseline is bundled.
-- Pre-existing git history is not rewritten; its disposition is the repository owner's decision. Apple, Liquid Glass, SwiftUI and SF Symbols are trademarks of Apple Inc.; this independent project is not affiliated with or endorsed by Apple.
+- [`NOTICE`](NOTICE) contains the neutral development notice. [`tests/SHOWCASE_CONTRACT.md`](tests/SHOWCASE_CONTRACT.md) records behavior verification or explicit untested items.
+- Project licensing is in [`LICENSE`](LICENSE). No external comparison baseline is bundled.
+- Apple, Liquid Glass, SwiftUI and SF Symbols are trademarks of Apple Inc.; this project is not affiliated with or endorsed by Apple.

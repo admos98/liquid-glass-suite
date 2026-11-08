@@ -1,6 +1,6 @@
 # Standalone original-showcase contract
 
-Restoration date: 2026-11-07. This contract replaces the clean-room acceptance matrix after the owner requested the original engine back. “Standalone” means self-contained offline packaging, not independent implementation authorship.
+This contract defines the current standalone showcase behavior. “Standalone” means self-contained offline packaging.
 
 | ID | Restored behavior | Evidence | Status |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Restoration date: 2026-11-07. This contract replaces the clean-room acceptance m
 | C12 | Forced colors disables optics and reduced motion removes toast transitions. | Emulated media and computed backdrop/canvas/transition checks. | Verified |
 | C13 | Radius simulation, displacement chart, and map preview remain live. | All three canvases produce nonblank output after control changes. | Verified |
 | C14 | Existing measurement scripts and fixtures retain behavior. | Python fixture tests pass unchanged. | Verified |
-| C15 | Headers/references describe standalone packaging with accurate original lineage; no external comparison baseline is bundled. | `NOTICE`, `PROVENANCE.md`, source manifest, current `shared/` references, and package audits. | Verified |
+| C15 | Headers/references describe standalone packaging with the neutral development notice; no external comparison baseline is bundled. | `NOTICE`, current `shared/` references, and package audits. | Verified |
 
 ## Verification record
 

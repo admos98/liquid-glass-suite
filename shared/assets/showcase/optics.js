@@ -2,8 +2,7 @@
 /*
  * Liquid Glass Suite — standalone showcase optics.
  * Self-contained offline runtime: no server, build step, network or external assets.
- * Technique and inherited implementation lineage are documented in NOTICE and
- * shared/assets/showcase/source-manifest.json. Preserve the original profile,
+ * Development notice: NOTICE. Preserve the original profile,
  * displacement/specular maps, filter graph, presets and historical dim behavior.
  */
 

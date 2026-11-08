@@ -236,6 +236,8 @@ Print this before any material pass. Every box has a reference for the why.
 - **Not a licence to skip verification.** This material cannot be verified by reading tokens. If no browser can be driven, say so plainly and hand back the measured numbers instead of a confident narrative.
 - **Not a substitute for the design decision.** Whether a surface should be glass at all, whether the field behind it is worth building, and whether the opacity sign-off is granted — those are user decisions. This skill makes each of them decidable with evidence.
 
-## §Provenance
+## §Development notice
 
-Consolidated from field research across production web implementations (React/Tailwind v4 apps, RTL and LTR, Chromium + WebKit + Firefox targets, real-device iOS field reports), native Apple platform docs extracted from DocC JSON, and measurement tooling. Source attribution and license scope are recorded in `shared/references/16-sources.md`, `NOTICE`, and `LICENSE`. Do not infer copied code or license obligations from another project's README. The prior standalone skills this replaces (`liquid-glass-web`, `liquid-glass-native`, `glass-overlay-motion`, `apple-hig` liquid-glass rules, `frontend-redesign-implementation`'s glass references) are preserved as individual references inside this package so nothing is lost in the merge; where two sources disagreed, the disagreement is flagged inline rather than silently resolved. Field research by Moslem Adib (admos98), consolidated and generalized.
+This skill suite was developed from publicly available information on the web and practical research with browser rendering engines. See `NOTICE` and `shared/references/16-sources.md`.
+
+Keep implementation claims tied to observable behavior, named test environments, and the verification limits documented in this reference set.

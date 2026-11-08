@@ -5,13 +5,13 @@ description: Use for Liquid Glass rendering strategy, original SVG displacement/
 
 # Liquid Glass optics
 
-Open [`../../shared/assets/showcase.html`](../../shared/assets/showcase.html) directly from disk. It is the restored original standalone showcase: no server, build, network, framework, or external assets are needed. Editable optics, controller, template, plates, and lineage manifest are in `../../shared/assets/showcase/`.
+Open [`../../shared/assets/showcase.html`](../../shared/assets/showcase.html) directly from disk. It is the restored original standalone showcase: no server, build, network, framework, or external assets are needed. Editable optics, controller, template, and plates are in `../../shared/assets/showcase/`.
 
 ## Restored original model
 
-The showcase preserves its original surface profile, Snell-derived displacement map, directional specular map, seven preset bundles, 2× map sampling, and historical linear RGB dim. The default drop-in retains its separate strategy-1 SVG lens/capability-gate implementation. Do not substitute the removed clean-room SDF engine or its presets.
+The showcase preserves its original surface profile, Snell-derived displacement map, directional specular map, seven preset bundles, 2× map sampling, and historical linear RGB dim. The default drop-in retains its separate strategy-1 SVG lens/capability-gate implementation. Preserve this model and its preset values; do not substitute a different optical engine.
 
-Standalone describes offline packaging, not independent authorship. Attribution and the inherited-code license boundary are in `../../NOTICE` and `../../PROVENANCE.md`.
+The neutral development notice is in `../../NOTICE`. Standalone means the showcase is self-contained and works offline.
 
 ## Route the problem
 
