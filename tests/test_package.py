@@ -132,6 +132,23 @@ class PackageContract(unittest.TestCase):
         self.assertIn('const PRESETS', optics)
         self.assertIn('const mapDPR =', optics)
 
+    def test_readme_media_order_and_committed_images(self):
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        markers = [
+            '# liquid-glass-suite',
+            'img.shields.io',
+            '![Liquid Glass refraction over a striped plate](docs/hero.png)',
+            '**Liquid Glass is refraction, not blur.**',
+            '## Showcase',
+            '![Close-up: backdrop text bending through the panel](docs/showcase-closeup.png)',
+        ]
+        positions = [readme.index(marker) for marker in markers]
+        self.assertEqual(positions, sorted(positions))
+        for relative in ('docs/hero.png', 'docs/showcase-closeup.png'):
+            image = ROOT / relative
+            self.assertTrue(image.is_file(), relative)
+            self.assertEqual(image.read_bytes()[:8], b'\x89PNG\r\n\x1a\n')
+
     def test_general_cap_and_webkit_budget_are_explicit(self):
         text = (ROOT / 'shared/references/08-performance.md').read_text(encoding='utf-8')
         self.assertIn('1024', text)

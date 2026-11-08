@@ -1,6 +1,10 @@
-# Liquid Glass Suite
+# liquid-glass-suite
 
-**Liquid Glass is refraction, not blur — this suite ships CSS/SVG and WebGL2 paths plus tools to measure the bend.**
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Offline showcase](https://img.shields.io/badge/Showcase-Offline-success.svg)](shared/assets/showcase.html)
+
+![Liquid Glass refraction over a striped plate](docs/hero.png)
+
+**Liquid Glass is refraction, not blur.** One suite with CSS/SVG and WebGL2 paths plus tools to measure the bend.
 
 > This skill suite was developed from publicly available information on the web and practical research with browser rendering engines. See [`NOTICE`](NOTICE). The showcase is self-contained and works offline.
 
@@ -40,6 +44,12 @@ The marketplace entry points at the repository root (`source: "./"`), and Claude
 | [`shared/scripts/`](shared/scripts/) | Displacement-map, edge-profile and chroma-retention measurement tools |
 
 There are exactly two application paths: the shared CSS/JS drop-in by default, or WebGL2 through optics for explicit textures/Safari true-refraction briefs. The standalone showcase is a product demonstration, not a third application architecture. It intentionally restores the original 2× maps, profile/specular construction, presets, and historical linear dim; production wash guidance remains documented separately.
+
+## Showcase
+
+![Close-up: backdrop text bending through the panel](docs/showcase-closeup.png)
+
+Open the [standalone showcase](shared/assets/showcase.html) directly from disk. No server, build, network, or external assets are required.
 
 ## Verify
 
