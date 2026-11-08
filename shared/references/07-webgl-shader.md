@@ -57,4 +57,4 @@ A historical app's approximately 2.4/255 mean inside delta is contextual evidenc
 
 ## Scope
 
-Current behavior tests run in the named Chromium runtime with software WebGL2. They are not real iPhone/Safari or native-rendering checks. Arbitrary live-DOM capture is not validated. Both renderers stay installed and selectable.
+Current behavior tests run in the named Chromium runtime with software WebGL2. They are not real iPhone/Safari or native-rendering checks — though an owner-tested physical-iPhone mobile-Safari run of the showcase is recorded in tests/evidence/verification.txt (bend renders; versions not recorded). Arbitrary live-DOM capture is not validated. Both renderers stay installed and selectable.

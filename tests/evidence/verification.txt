@@ -1,6 +1,6 @@
 Liquid Glass Suite — standalone verification
-Date (UTC): 2026-11-07
-Branch: arena/a36d9f6a-ultimate-liquid-glass
+Date (UTC): 2026-11-08
+Branch: arena/13ea7ccf-liquid-glass-suite
 README: hero above pitch; close-up in Showcase; both supplied PNGs committed unchanged.
 Browser: Chromium 153.0.8010.0; software WebGL2
 Node: v22.22.3
@@ -39,7 +39,7 @@ test_skill_byte_budgets_are_acceptance_criteria (test_package.PackageContract.te
 test_skill_names_plugin_and_marketplace_match_the_installable_suite (test_package.PackageContract.test_skill_names_plugin_and_marketplace_match_the_installable_suite) ... ok
 
 ----------------------------------------------------------------------
-Ran 17 tests in 0.257s
+Ran 17 tests in 0.288s
 
 OK
 
@@ -49,19 +49,19 @@ OK
 
 Running 11 tests using 1 worker
 
-  ✓   1 [chromium] › tests/browser/showcase.spec.mjs:43:1 › standalone file works offline and creates original 2x maps (713ms)
-  ✓   2 [chromium] › tests/browser/showcase.spec.mjs:59:1 › all seven original preset buttons apply their complete original bundles (2.8s)
-  ✓   3 [chromium] › tests/browser/showcase.spec.mjs:70:1 › surface families, live controls and diagnostic canvases remain functional (3.1s)
-  ✓   4 [chromium] › tests/browser/showcase.spec.mjs:97:1 › original plates and generated background work without external assets (2.9s)
-  ✓   5 [chromium] › tests/browser/showcase.spec.mjs:108:1 › WebGL2 draws optical changes and comparison mode keeps CSS alive (2.4s)
-  ✓   6 [chromium] › tests/browser/showcase.spec.mjs:122:1 › WebGL2 unavailable keeps a visible CSS fallback (1.1s)
-  ✓   7 [chromium] › tests/browser/showcase.spec.mjs:133:1 › reduced transparency pauses draws and restores the requested renderer (1.4s)
-  ✓   8 [chromium] › tests/browser/showcase.spec.mjs:146:1 › forced colors and reduced motion retain accessible CSS behavior (334ms)
-  ✓   9 [chromium] › tests/browser/showcase.spec.mjs:154:1 › invalid imported state is rejected atomically and valid URL state restores (1.0s)
-  ✓  10 [chromium] › tests/browser/showcase.spec.mjs:167:1 › pointer, keyboard, reset, mobile overflow and visible focus still work (724ms)
-  ✓  11 [chromium] › tests/browser/showcase.spec.mjs:183:1 › exports use package tokens and clipboard failure is honest (350ms)
+  ✓   1 [chromium] › tests/browser/showcase.spec.mjs:43:1 › standalone file works offline and creates original 2x maps (1.0s)
+  ✓   2 [chromium] › tests/browser/showcase.spec.mjs:59:1 › all seven original preset buttons apply their complete original bundles (3.5s)
+  ✓   3 [chromium] › tests/browser/showcase.spec.mjs:70:1 › surface families, live controls and diagnostic canvases remain functional (3.5s)
+  ✓   4 [chromium] › tests/browser/showcase.spec.mjs:97:1 › original plates and generated background work without external assets (3.6s)
+  ✓   5 [chromium] › tests/browser/showcase.spec.mjs:108:1 › WebGL2 draws optical changes and comparison mode keeps CSS alive (3.1s)
+  ✓   6 [chromium] › tests/browser/showcase.spec.mjs:122:1 › WebGL2 unavailable keeps a visible CSS fallback (1.5s)
+  ✓   7 [chromium] › tests/browser/showcase.spec.mjs:133:1 › reduced transparency pauses draws and restores the requested renderer (1.8s)
+  ✓   8 [chromium] › tests/browser/showcase.spec.mjs:146:1 › forced colors and reduced motion retain accessible CSS behavior (511ms)
+  ✓   9 [chromium] › tests/browser/showcase.spec.mjs:154:1 › invalid imported state is rejected atomically and valid URL state restores (1.3s)
+  ✓  10 [chromium] › tests/browser/showcase.spec.mjs:167:1 › pointer, keyboard, reset, mobile overflow and visible focus still work (943ms)
+  ✓  11 [chromium] › tests/browser/showcase.spec.mjs:183:1 › exports use package tokens and clipboard failure is honest (425ms)
 
-  11 passed (17.9s)
+  11 passed (22.3s)
 
 Additional checks:
 README media order and committed PNG checks: PASS.
@@ -73,5 +73,25 @@ git diff --check: PASS
 Showcase bytes: 283045
 Showcase SHA-256: a274fb5977d07f92f745a48d2e2bb2cc138217787c2c80343ed582be0e67cfa7
 Contract: C01-C15 PASS; no external comparison target or committed pixel baseline.
-Claude CLI validation: NOT RUN (CLI unavailable).
-Real Safari/iPhone and native Apple runtimes: NOT RUN.
+
+Owner-tested: Claude Code marketplace install — recorded 2026-11-08 (owner-tested on real tooling, not run in this sandbox)
+- Claude Code version: 2.1.319.
+- Marketplace clone succeeded.
+- `liquid-glass-suite@admos98-skills` installed and enabled as version 2.0.0.
+- Claude Code discovered all four skills.
+- The installed commit matches the updated checkout.
+- Both manifests passed strict validation.
+- All 17 package tests and the showcase build check passed.
+- Advisory only: missing listing icon. It does not block installation. No listing-icon asset exists in this repository, and designing one was out of scope for this settlement round, so the advisory is accepted and recorded here.
+Platform note: the marketplace clone succeeded while the repository was private because the owner's machine has authenticated GitHub access. Public users will clone the public repository; either way the install flow is now tested end-to-end. Anonymous access to a private repository was not tested. The Claude CLI is not installed in this verification sandbox; this section records the owner's test, not a sandbox run.
+
+Owner-tested: physical iPhone Safari — recorded 2026-11-08 (owner-tested on real hardware, not run in this sandbox)
+- Device class: physical iPhone.
+- Browser: mobile Safari.
+- Artefact: standalone shared/assets/showcase.html served over HTTP.
+- Result: the refraction/bend renders; the showcase works perfectly (owner-tested).
+- iOS/Safari versions: not recorded.
+- Which internal rendering path produced the bend is not recorded; under the showcase's conservative Chromium gate the CSS+SVG path resolves to frost on non-Chromium engines, and the WebGL2 renderer is the selectable true-refraction route on WebKit.
+- This result supersedes the previous "iOS only ever shows frost" assumption for the tested configuration. Behaviour is version- and renderer-dependent; frost remains the guaranteed floor on untested configurations. Playwright WebKit is not a real iPhone — real-device testing outranks emulation, and this project's own evidence is the reason.
+
+Native Apple runtimes: NOT RUN (native samples were not compiled on Apple hardware).

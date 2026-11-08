@@ -22,4 +22,4 @@ The Playwright config uses the dev-only packaged Chromium runtime on Linux. For 
 
 No external implementation, image, or pixel baseline is a comparison target. WebGL optical-change checks compare two states of this same showcase; they are not external resemblance tests. The synthetic map/rim/glow/cutout fixtures validate measurement tools, not a browser.
 
-Actual output belongs in `tests/evidence/verification.txt`. An unavailable browser or CLI is reported as untested, never converted to a pass. Desktop Chromium is not a real-device Safari/iPhone check, and native examples are not native-runtime passes.
+Actual output belongs in `tests/evidence/verification.txt`. An unavailable browser or CLI is reported as untested, never converted to a pass. Desktop Chromium is not a real-device Safari/iPhone check, and native examples are not native-runtime passes. The owner-tested physical-iPhone mobile-Safari result (standalone showcase served over HTTP; bend renders; versions not recorded) and the Claude Code 2.1.319 marketplace install are recorded in `tests/evidence/verification.txt`.

@@ -14,4 +14,4 @@ The glass bend works in Chrome but is broken on my iPhone. Why is backdrop-filte
 - Distinguishes content `filter:url()` from `backdrop-filter:url()`; `@supports` alone is not accepted as paint evidence.
 - Keeps the blur+saturate fallback and does not promise SVG-backdrop refraction in Safari.
 - Offers explicit-texture WebGL2 through `liquid-glass-optics` when true WebKit refraction is required.
-- Names real-device verification as untested unless the evaluator actually performs it.
+- Names real-device verification honestly: the recorded owner-tested iPhone Safari result (bend renders; versions not recorded) may be cited; an evaluator who has not tested must still say untested rather than invent a pass.

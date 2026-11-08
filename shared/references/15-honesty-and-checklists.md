@@ -38,7 +38,7 @@ Summary:
 
 ## §Conflicts kept visible
 
-- **`backdrop-filter: url()` direction:** an older archived note claimed "Safari-only, dead in Chrome"; WebKit 245510 + a June 2026 repro say the opposite (Chromium-only). This skill follows the bug/repro and flags the older note in place rather than silently overwriting it. Verify on device. → see shared/references/06-safari-webkit.md §7.
+- **`backdrop-filter: url()` direction:** an older archived note claimed "Safari-only, dead in Chrome"; WebKit 245510 + a June 2026 repro say the opposite (Chromium-only). This skill follows the bug/repro and flags the older note in place rather than silently overwriting it. Verify on device. Owner-tested 2026-11-08: the standalone showcase served over HTTP and opened in mobile Safari on a physical iPhone renders the bend and works perfectly (iOS/Safari versions not recorded) — iOS Safari is not frost-only in practice, version- and renderer-dependent; frost remains the guaranteed floor on untested versions. → see shared/references/06-safari-webkit.md §1, tests/evidence/verification.txt.
 - **Static `<filter>` reuse:** Safari caches by ID; Chromium caches by ID too — same rule, both broken the same way. → see shared/references/05-chromium-quirks.md §3.
 - **OS material on the open web:** `-apple-system-glass-material` is presented as usable under `@supports` in one source and as a dead end (needs private `WKPreferences.useSystemAppearance`) in another. Verify on a real device; keep `blur() + saturate()` as the base. → see shared/references/06-safari-webkit.md §6.
 

@@ -57,7 +57,7 @@ Use **`@utility`** when a material should participate in Tailwind variants. Plai
 
 - `url(#lg-displace)` = one SVG `<filter id="lg-displace">` rendered once at app root. One filter on the largest ancestor, not stacked per card.
 - `saturate(1.5)` light / `saturate(1.4)` dark is what reads "liquid" vs fog. Plain blur reads as fog.
-- Safari/Firefox don't support `backdrop-filter: url(#svg)` — displacement falls through to `blur()`, specular + bezel carry the effect. → see shared/references/06-safari-webkit.md §1.
+- Safari/Firefox don't render the SVG-backdrop bend in documented engine behaviour — displacement falls through to `blur()`; specular + bezel carry the effect. The bend is confirmed on the owner-tested iPhone Safari; frost is the floor elsewhere. → see shared/references/06-safari-webkit.md §1.
 - Each tier needs a visibly different recipe (alpha, blur, radius, shadow, specular) and exactly one job — recipes without hierarchy read as one flat material.
 
 ## §Never name a utility `lg*`

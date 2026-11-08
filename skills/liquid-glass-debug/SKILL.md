@@ -46,7 +46,7 @@ Start with the symptom, then use the full first checks and diagnostic order in [
 ## Engine quirks
 
 - **Chromium:** alpha-0 maps die; filters cache by ID; backdrop ends at the element edge; transforms can skew the lens. See `../../shared/references/05-chromium-quirks.md`.
-- **Safari/WebKit:** `backdrop-filter:url()` is the known wall; content `filter:url()` is different. Filter IDs cache, promoted children can leave an ancestor filter, and Playwright WebKit is not a real iPhone. See `../../shared/references/06-safari-webkit.md`.
+- **Safari/WebKit:** `backdrop-filter:url()` is blocked in documented WebKit behaviour (245510); content `filter:url()` is different. Filter IDs cache, promoted children can leave an ancestor filter, and Playwright WebKit is not a real iPhone — the owner's physical iPhone Safari renders the standalone showcase's bend (2026-11-08; verify on target versions). See `../../shared/references/06-safari-webkit.md`.
 - **Strategy/parity:** use `liquid-glass-optics` for WebGL2, per-geometry maps or reference matching. A syntax `@supports` result is not paint evidence.
 
 ## Measure

@@ -10,7 +10,7 @@ Summary:
 - Four paths: three refraction paths plus one universal `blur() saturate()` fallback that every browser keeps.
 - `url()` goes LAST in the chain; `@supports` is a syntax probe, not a paint probe.
 - Apple publishes no numeric spec. Glass belongs to the navigation/overlay layer, not the content layer.
-- State the support floor in the handoff: an absent bend in Safari/Firefox is expected output, not a defect.
+- State the support floor in the handoff: frost guaranteed; bend confirmed on owner-tested iPhone Safari; an absent bend on untested versions is expected output, not a defect — verify on the target version.
 
 ## §0 Before you pick: should this surface be glass?
 
@@ -41,8 +41,8 @@ Scope the lens to surfaces that float over the page background — popups, menus
 
 Ship strategy 2 only when:
 - the surface carries no live content of its own to distort;
-- Safari/Firefox get blur-only and that is accepted (they always get the fallback);
-- the handoff says "refraction is Chromium-138+-only" — expected output there, not a defect.
+- untested Safari/Firefox targets get frost-only and that is accepted (frost is the guaranteed floor); the bend is confirmed on the owner-tested iPhone Safari; verify on the target versions;
+- the handoff says "the SVG backdrop path is Chromium-138+-only" — expected output there, not a defect.
 
 Strategy 1 can filter an owned/captured source, but it is not an arbitrary live-backdrop solution. The shipped WebGL2 route is the selectable texture-backed alternative on WebKit; video and live-DOM source handling are separate application work. → see shared/references/06-safari-webkit.md §1, §3.
 
@@ -50,6 +50,7 @@ Strategy 1 can filter an owned/captured source, but it is not an arbitrary live-
 
 ## §3 Safari / Chromium / Firefox specifics
 
+- Owner-tested 2026-11-08: the standalone showcase served over HTTP and opened in mobile Safari on a physical iPhone renders the bend and works perfectly (iOS/Safari versions not recorded). Behaviour is version- and renderer-dependent: frost is guaranteed, the bend is confirmed on that device, verify on the target versions. → see shared/references/06-safari-webkit.md §1, tests/evidence/verification.txt.
 - Safari caches `<filter>` output by ID: replacing a `<filter>` under the same ID keeps rendering the old one. Mint a fresh ID on every update and update the `filter` value with it. Safari also has a source-graphic size ceiling above which it blocks or drops the effect. → see shared/references/06-safari-webkit.md §2
 - Minification can delete the kill. A rule `{ backdrop-filter: none !important; -webkit-backdrop-filter: none !important }` gets deduped to ONE declaration, the survivor being the last one written. If `-webkit-` survives, Chromium ignores it and every drawn panel keeps blurring under your canvas. Apply the kill inline: `el.style.setProperty('backdrop-filter','none','important')` plus the `-webkit-` twin. → see shared/references/10-measurement.md §Live audit
 - The same chain order applies in the shader path. → see shared/references/07-webgl-shader.md §Hybrid

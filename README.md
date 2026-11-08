@@ -21,14 +21,14 @@ One repository, one Claude Code plugin, four task-focused skills over shared ass
 
 ## Install
 
-For users with access to the private repository, register its marketplace and install the plugin:
+Register the plugin marketplace and install the plugin:
 
 ```text
 /plugin marketplace add admos98/liquid-glass-suite
 /plugin install liquid-glass-suite@admos98-skills
 ```
 
-The marketplace entry points at the repository root (`source: "./"`), and Claude Code auto-discovers all four folders under `skills/`.
+The marketplace entry points at the repository root (`source: "./"`), and Claude Code auto-discovers all four folders under `skills/`. The full flow was owner-tested end-to-end with Claude Code 2.1.319: marketplace clone, install, skill discovery, strict manifest validation, all 17 package tests and the showcase build check pass. The only advisory was a missing listing icon, which does not block installation. See [`tests/evidence/verification.txt`](tests/evidence/verification.txt) for the test record, including the platform note.
 
 **Manual install:** copy the entire `liquid-glass-suite` folder into the agent's skills area, then expose each `skills/<name>` folder in its skill scan path using the agent's supported folder-link mechanism. Each folder name matches its frontmatter `name`. Keep the suite intact because its `../../shared/...` references must resolve. For a local Claude Code run without marketplace installation, `claude --plugin-dir /path/to/liquid-glass-suite` loads the same unit.
 
@@ -65,12 +65,13 @@ node --check shared/assets/showcase/controller.js
 npm test
 ```
 
-The dev-only Chromium package supplies the Linux test runtime; on another platform use `PLAYWRIGHT_SYSTEM_CHROMIUM=1` after `npx playwright install chromium`. Run `claude plugin validate .` when the Claude Code CLI is available. [`tests/evidence/verification.txt`](tests/evidence/verification.txt) records actual runs. [`evals/`](evals/) contains ten agent benchmarks with empty results tables.
+The dev-only Chromium package supplies the Linux test runtime; on another platform use `PLAYWRIGHT_SYSTEM_CHROMIUM=1` after `npx playwright install chromium`. The marketplace install and strict manifest validation were owner-tested with Claude Code 2.1.319 — see [`tests/evidence/verification.txt`](tests/evidence/verification.txt) for actual runs. [`evals/`](evals/) contains ten agent benchmarks with empty results tables.
 
 ## Scope and license
 
 - Apple publishes no numeric Liquid Glass specification. Keep `src: apple-hig | community | figma | measured` distinctions; browser heuristics are not Apple requirements.
 - CSS syntax support is not paint evidence. Name the renderer, browser, geometry and fallback in every optical claim. Playwright is not a real iPhone, and native samples are not a native-runtime pass.
+- Safari: the bend is confirmed working on the owner-tested iPhone Safari (standalone showcase opened in mobile Safari; iOS/Safari versions not recorded). Untested versions keep the frosted fallback as the guaranteed floor — verify on the target version.
 - [`NOTICE`](NOTICE) contains the neutral development notice. [`tests/SHOWCASE_CONTRACT.md`](tests/SHOWCASE_CONTRACT.md) records behavior verification or explicit untested items.
 - Project licensing is in [`LICENSE`](LICENSE). No external comparison baseline is bundled.
 - Apple, Liquid Glass, SwiftUI and SF Symbols are trademarks of Apple Inc.; this project is not affiliated with or endorsed by Apple.
