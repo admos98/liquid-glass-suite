@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" data-render="css">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liquid Glass Suite — clean-room optics</title>
+<style>
+  :root{
+    --bg:#fafafa; --card:#fff; --ink:#171717; --mut:#737373; --line:#e5e5e5;
+    --track:rgba(0,0,0,.18); --accent:#0369a1;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:20px 16px 60px}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:6px}
+  header h1{font-size:20px;margin:0;letter-spacing:-.01em}
+  .badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;
+    background:#fef3c7;color:#92400e;border:1px solid #fde68a;white-space:nowrap}
+  .badge.bad{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+  .sub{color:var(--mut);font-size:12.5px;margin:0 0 16px;max-width:76ch}
+  .sub code{background:#f0f0f0;border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:11.5px}
+  .banner{display:none;background:#fffbeb;border:1px solid #fde68a;color:#92400e;
+    border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px}
+  .banner.show{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+  .card h2{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+    margin:0 0 14px;color:var(--ink)}
+  .card h2 .n{color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0}
+  /* stage */
+  #stage{position:relative;height:400px;border-radius:14px;overflow:hidden;
+    border:1px solid var(--line);background-size:cover;background-position:center}
+  #stage.dark{--gInk:#f5f5f5}
+  #stage.light{--gInk:#1c1c1c}
+  #glass{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--gInk,#1c1c1c);
+    backdrop-filter:blur(2.5px) saturate(1.35);-webkit-backdrop-filter:blur(2.5px) saturate(1.35)}
+  #glass.fallback{backdrop-filter:blur(8px) saturate(1.4);-webkit-backdrop-filter:blur(8px) saturate(1.4);
+    background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+  #glass svg{flex:none;width:16px;height:16px;opacity:.75}
+  #glass span{font-size:13px;opacity:.75;user-select:none}
+  .stagebar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+  .chip{font-size:11.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);
+    background:#fff;color:#404040;cursor:pointer}
+  .chip.on{border-color:#0369a1;color:#0369a1;background:#f0f9ff;font-weight:600}
+  .chk{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#404040;
+    margin-left:auto;cursor:pointer;user-select:none}
+  /* control rows */
+  .row{display:flex;align-items:center;gap:14px;padding:7px 0}
+  .row label{flex:none;width:210px;font-size:11px;font-weight:500;letter-spacing:.08em;
+    text-transform:uppercase;opacity:.8;user-select:none;line-height:1.2}
+  .row output{flex:none;width:44px;text-align:right;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-variant-numeric:tabular-nums;color:#0009}
+  .row input[type=range]{flex:1;appearance:none;-webkit-appearance:none;height:2px;
+    background:var(--track);border-radius:2px;outline:none;cursor:pointer}
+  .row input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;
+    width:13px;height:13px;border-radius:50%;background:#fff;border:1px solid #0004;
+    box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .row input[type=number]{width:74px;font:12px ui-monospace,monospace;padding:4px 6px;
+    border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+  .surfaces{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .sbtn{display:inline-flex;align-items:center;gap:7px;font-size:12px;padding:5px 12px 5px 7px;
+    border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:#404040}
+  .sbtn svg{width:20px;height:20px}
+  .sbtn.on{border-color:#0369a1;color:#0369a1;background:#f0f9ff;font-weight:600}
+  .presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+  .presets .lbl{font-size:11px;color:var(--mut);align-self:center;margin-right:2px}
+  .pbtn{font-size:11.5px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);
+    background:#fafafa;cursor:pointer;color:#525252}
+  .pbtn:hover{border-color:#a3a3a3;color:#171717}
+  /* charts */
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-bottom:14px}
+  .grid3 .card{margin-bottom:0}
+  .grid3 h3{font-size:12px;font-weight:600;margin:0 0 10px;color:var(--ink)}
+  .grid3 canvas{width:100%;height:150px;display:block;border-radius:8px;background:#fcfcfc;border:1px solid #f0f0f0}
+  .axlab{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-top:5px}
+  /* footer */
+  .foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .btn{font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:9px;border:none;cursor:pointer;
+    background:#171717;color:#fff}
+  .btn:hover{background:#000}
+  #status{font:11px ui-monospace,monospace;color:var(--mut)}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(8px);
+    background:#171717;color:#fff;font-size:12.5px;padding:8px 16px;border-radius:9px;
+    opacity:0;pointer-events:none;transition:.25s}
+  #toast.show{opacity:1;transform:translateX(-50%)}
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .two>.card{min-width:0}
+  .row input[type=number]{min-width:0}
+  @media(max-width:760px){.two{grid-template-columns:minmax(0,1fr)}.row label{width:150px}}
+
+/* Showcase-only layout; clean maps are injected at runtime. */
+#stage,#stage-gl{position:relative;height:400px;background-size:cover;background-position:center;overflow:hidden;border:1px solid var(--line);border-radius:14px}
+#stage-gl{display:none;margin-top:12px;--gInk:#1c1c1c}
+#stage-gl.dark{--gInk:#f5f5f5}
+:root[data-render="split"] #stage-gl{display:block}
+#glass-gl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--gInk);background:transparent}
+#glass-gl svg{flex:none;width:16px;height:16px;opacity:.75}
+#glass-gl span{font-size:13px;opacity:.75;user-select:none}
+#glass,#glass-gl{z-index:1;cursor:grab;touch-action:none}
+#glass:active,#glass-gl:active{cursor:grabbing}
+#glass-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:none}
+:root[data-render="webgl"] #glass{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important;box-shadow:none!important}
+:root[data-render="split"] #glass-gl{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important}
+.rendererbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.rendererbar label{font-size:12px}
+.rendererbar select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+#render-status{font:11px/1.6 ui-monospace,monospace;color:var(--mut);margin:10px 0 0;overflow-wrap:anywhere}
+:focus-visible{outline:2px solid var(--accent)!important;outline-offset:4px}
+#toast{transition:opacity 160ms ease,transform 160ms ease}
+:root[data-reduced-transparency="true"] #glass,:root[data-reduced-transparency="true"] #glass-gl{background:#f4f5f8!important;color:#171717!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:inset 0 0 0 1px #737373}
+:root[data-reduced-transparency="true"] #stage.dark #glass{background:#171923!important;color:#f5f5f5!important}
+@media(max-width:980px){.two{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.wrap{padding:14px 12px 40px}.card{padding:14px 12px}.row{gap:8px}.row label{width:138px;font-size:10px}.row output{width:38px}.grid3{grid-template-columns:minmax(0,1fr)}#stage,#stage-gl{height:320px}.chk{margin-left:0}.rendererbar{gap:8px}.sub{font-size:12px}.row input[type=range]{min-width:0}}
+@media(prefers-reduced-motion:reduce){#toast{transition:none}}
+@media(forced-colors:active){#glass,#glass-gl{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}#glass-canvas{display:none!important}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Liquid Glass Suite</h1><span class="badge" id="browserBadge">Clean-room optics</span></header>
+  <p class="sub">An interactive reference for this suite's independent SDF engine. Two renderers share the same optical maps. Drag the panel or use the arrow keys.</p>
+  <div class="banner" id="banner">CSS + SVG backdrop refraction is conservatively gated. WebGL2 uses an explicit texture on other supported engines; the frosted CSS fallback always remains available.</div>
+
+  <div class="card">
+    <h2>Material preview <span class="n">— clean-room engine</span></h2>
+    <div id="stage" class="light">
+      <div id="glass" tabindex="0" role="group" aria-label="Move the glass preview with the arrow keys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span>Search</span>
+      </div>
+    </div>
+    <div class="stagebar">
+      <button class="chip plate on" data-plate="grid" data-theme="light">Grid · light</button>
+      <button class="chip plate" data-plate="grid" data-theme="dark">Grid · dark</button>
+      <button class="chip plate" data-plate="spectrum" data-theme="light">Spectrum · light</button>
+      <button class="chip plate" data-plate="spectrum" data-theme="dark">Spectrum · dark</button>
+      <button class="chip plate" data-plate="orbit" data-theme="light">Orbit · light</button>
+      <button class="chip plate" data-plate="orbit" data-theme="dark">Orbit · dark</button>
+      <button class="chip plate" data-plate="type" data-theme="light">Type · light</button>
+      <button class="chip plate" data-plate="type" data-theme="dark">Type · dark</button>
+      <label class="chk"><input type="checkbox" id="imgBg"> Generated plate</label>
+    </div>
+    <div class="rendererbar">
+      <label for="renderer">Renderer</label>
+      <select id="renderer"><option value="css" selected>CSS + SVG · SDF</option><option value="webgl">WebGL2 · same maps</option><option value="split">Compare both</option></select>
+      <button type="button" class="pbtn" id="reset-position">Centre glass</button>
+      <label class="chk" for="reduce-transparency"><input type="checkbox" id="reduce-transparency"> Reduce transparency</label>
+    </div>
+    <p id="render-status" role="status">Preparing the clean-room material…</p>
+    <div id="stage-gl" class="light" aria-label="WebGL2 comparison"><div id="glass-gl" tabindex="0" role="group" aria-label="Move the WebGL2 comparison preview with the arrow keys"></div></div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>Optical controls</h2>
+      <div class="row"><label for="specular">Specular strength</label><output id="o-specular">0.3</output><input type="range" id="specular" min="0" max="0.8" step="0.05" value="0.3"></div>
+      <div class="row"><label for="chroma">Rim saturation</label><output id="o-chroma">2.5</output><input type="range" id="chroma" min="1" max="6" step="0.25" value="2.5"></div>
+      <div class="row"><label for="refraction">Refraction level</label><output id="o-refraction">0.85</output><input type="range" id="refraction" min="0" max="1.5" step="0.05" value="0.85"></div>
+      <div class="row"><label for="blur">Blur</label><output id="o-blur">2.5</output><input type="range" id="blur" min="0" max="16" step="0.5" value="2.5"></div>
+      <div class="row"><label for="lightAngle">Light angle</label><output id="o-lightAngle">-35°</output><input type="range" id="lightAngle" min="-180" max="180" step="5" value="-35"></div>
+      <div class="row"><label for="fill">Background opacity</label><output id="o-fill">0.08</output><input type="range" id="fill" min="0" max="0.6" step="0.01" value="0.08"></div>
+      <div class="row"><label for="dim">Dim strength</label><output id="o-dim">0.15</output><input type="range" id="dim" min="0" max="0.5" step="0.01" value="0.15"></div>
+    </div>
+    <div class="card">
+      <h2>Surface &amp; geometry</h2>
+      <div class="surfaces" id="surfaceBtns"></div>
+      <div class="row"><label for="bezel">Bezel width</label><output id="o-bezel">16</output><input type="range" id="bezel" min="4" max="40" step="1" value="16"></div>
+      <div class="row"><label for="thickness">Glass thickness</label><output id="o-thickness">48</output><input type="range" id="thickness" min="10" max="100" step="2" value="48"></div>
+      <div class="row"><label for="gain">Displacement gain</label><output id="o-gain">1</output><input type="range" id="gain" min="0.25" max="1.5" step="0.05" value="1"></div>
+      <div class="row"><label for="radius">Corner radius</label><output id="o-radius">18</output><input type="range" id="radius" min="0" max="160" data-limit="160" step="1" value="18"></div>
+      <div class="row"><label>Panel size</label><input type="number" aria-label="Panel width" id="width" min="80" max="640" step="2" value="340" style="flex:1;max-width:110px"><span style="color:#0006">×</span><input type="number" aria-label="Panel height" id="height" min="32" max="320" step="2" value="52" style="flex:1;max-width:110px"><span style="font-size:11px;color:var(--mut)">px</span></div>
+      <div class="presets"><span class="lbl">Product presets:</span>
+        <button class="pbtn" data-preset="navigation">Navigation / search</button><button class="pbtn" data-preset="toggle">Toggle switch</button><button class="pbtn" data-preset="slider">Slider</button><button class="pbtn" data-preset="player">Media player</button><button class="pbtn" data-preset="loupe">Loupe lens</button>
+      </div>
+      <div class="presets"><span class="lbl">App panels:</span><button class="pbtn" data-preset="panelA" style="border-color:#0369a1;color:#0369a1">Type A · banner</button><button class="pbtn" data-preset="panelB" style="border-color:#0369a1;color:#0369a1">Type B · menu</button><span class="lbl" style="margin-left:auto">URL keeps your state</span></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><h3>Cross-section vectors</h3><canvas id="simCanvas"></canvas><div class="axlab"><span>Center row</span><span>decoded displacement</span></div></div>
+    <div class="card"><h3>Horizontal displacement</h3><canvas id="chartCanvas"></canvas><div class="axlab"><span>CSS px</span><span>panel width →</span></div></div>
+    <div class="card"><h3>Displacement map</h3><canvas id="mapCanvas"></canvas><div class="axlab"><span>R = X · G = Y · 128 = neutral</span><span id="mapMeta"></span></div></div>
+  </div>
+  <div class="card"><div class="foot"><button class="btn" id="copyBtn">Copy CSS tokens</button><button class="btn" id="copyJsonBtn" style="background:#525252">Copy JSON</button><button class="btn" id="copyAppBtn" style="background:#0369a1">Copy integration tokens</button><span id="status"></span></div></div>
+  <p class="sub">Independent clean-room implementation. Technique credit and per-file origins are recorded in PROVENANCE.md.</p>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<svg colorInterpolationFilters="sRGB" style="display:none" aria-hidden="true"><defs id="filterDefs"></defs></svg>
+<!-- Rebuild with node scripts/build-showcase.mjs. Embedded clean-room scripts and authored plates; no network dependencies. -->
+<!-- LIQUID_GLASS_SUITE_RUNTIME -->
+</body>
+</html>
