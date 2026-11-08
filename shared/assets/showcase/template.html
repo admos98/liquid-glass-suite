@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Liquid Glass Suite — clean-room optics</title>
+<title>Liquid Glass Suite — standalone refraction &amp; rim showcase</title>
 <style>
   :root{
     --bg:#fafafa; --card:#fff; --ink:#171717; --mut:#737373; --line:#e5e5e5;
@@ -34,9 +34,9 @@
     border:1px solid var(--line);background-size:cover;background-position:center}
   #stage.dark{--gInk:#f5f5f5}
   #stage.light{--gInk:#1c1c1c}
-  #glass{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  #glass{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
     display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--gInk,#1c1c1c);
-    backdrop-filter:blur(2.5px) saturate(1.35);-webkit-backdrop-filter:blur(2.5px) saturate(1.35)}
+    backdrop-filter:url(#lgf);-webkit-backdrop-filter:url(#lgf)}
   #glass.fallback{backdrop-filter:blur(8px) saturate(1.4);-webkit-backdrop-filter:blur(8px) saturate(1.4);
     background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
   #glass svg{flex:none;width:16px;height:16px;opacity:.75}
@@ -47,7 +47,7 @@
   .chip.on{border-color:#0369a1;color:#0369a1;background:#f0f9ff;font-weight:600}
   .chk{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#404040;
     margin-left:auto;cursor:pointer;user-select:none}
-  /* control rows */
+  /* control rows — responsive layout */
   .row{display:flex;align-items:center;gap:14px;padding:7px 0}
   .row label{flex:none;width:210px;font-size:11px;font-weight:500;letter-spacing:.08em;
     text-transform:uppercase;opacity:.8;user-select:none;line-height:1.2}
@@ -91,12 +91,12 @@
   .row input[type=number]{min-width:0}
   @media(max-width:760px){.two{grid-template-columns:minmax(0,1fr)}.row label{width:150px}}
 
-/* Showcase-only layout; clean maps are injected at runtime. */
+/* Showcase-only layout; the standalone engine supplies its own graph. */
 #stage,#stage-gl{position:relative;height:400px;background-size:cover;background-position:center;overflow:hidden;border:1px solid var(--line);border-radius:14px}
 #stage-gl{display:none;margin-top:12px;--gInk:#1c1c1c}
 #stage-gl.dark{--gInk:#f5f5f5}
 :root[data-render="split"] #stage-gl{display:block}
-#glass-gl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--gInk);background:transparent}
+#glass-gl{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--gInk);background:transparent}
 #glass-gl svg{flex:none;width:16px;height:16px;opacity:.75}
 #glass-gl span{font-size:13px;opacity:.75;user-select:none}
 #glass,#glass-gl{z-index:1;cursor:grab;touch-action:none}
@@ -121,76 +121,148 @@
 </head>
 <body>
 <div class="wrap">
-  <header><h1>Liquid Glass Suite</h1><span class="badge" id="browserBadge">Clean-room optics</span></header>
-  <p class="sub">An interactive reference for this suite's independent SDF engine. Two renderers share the same optical maps. Drag the panel or use the arrow keys.</p>
-  <div class="banner" id="banner">CSS + SVG backdrop refraction is conservatively gated. WebGL2 uses an explicit texture on other supported engines; the frosted CSS fallback always remains available.</div>
 
+  <header>
+    <h1>Liquid Glass Suite</h1>
+    <span class="badge" id="browserBadge">Standalone optics</span>
+  </header>
+  <p class="sub">Real refraction, reflective rims, and the original presets in a standalone package. Two renderers, the same optical maps. Drag the glass across the image or use the arrow keys.</p>
+  <div class="banner" id="banner">The <b>CSS + SVG renderer</b> is conservatively limited to Chromium. Choose WebGL2 for texture-backed refraction on other supported engines, or keep the frosted CSS fallback.</div>
+
+  <!-- ═══════════ PREVIEW ═══════════ -->
   <div class="card">
-    <h2>Material preview <span class="n">— clean-room engine</span></h2>
+    <h2>Material preview <span class="n">— standalone engine</span></h2>
     <div id="stage" class="light">
       <div id="glass" tabindex="0" role="group" aria-label="Move the glass preview with the arrow keys">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <span>Search</span>
       </div>
     </div>
     <div class="stagebar">
-      <button class="chip plate on" data-plate="grid" data-theme="light">Grid · light</button>
-      <button class="chip plate" data-plate="grid" data-theme="dark">Grid · dark</button>
-      <button class="chip plate" data-plate="spectrum" data-theme="light">Spectrum · light</button>
-      <button class="chip plate" data-plate="spectrum" data-theme="dark">Spectrum · dark</button>
-      <button class="chip plate" data-plate="orbit" data-theme="light">Orbit · light</button>
-      <button class="chip plate" data-plate="orbit" data-theme="dark">Orbit · dark</button>
-      <button class="chip plate" data-plate="type" data-theme="light">Type · light</button>
-      <button class="chip plate" data-plate="type" data-theme="dark">Type · dark</button>
-      <label class="chk"><input type="checkbox" id="imgBg"> Generated plate</label>
+      <button class="chip plate on" data-plate="e" data-theme="light">App · E light</button>
+      <button class="chip plate" data-plate="e" data-theme="dark">App · E dark</button>
+      <button class="chip plate" data-plate="d" data-theme="light">App · D light</button>
+      <button class="chip plate" data-plate="d" data-theme="dark">App · D dark</button>
+      <button class="chip plate" data-plate="f" data-theme="light">App · F light</button>
+      <button class="chip plate" data-plate="g" data-theme="dark">App · G dark</button>
+      <label class="chk"><input type="checkbox" id="imgBg"> Use image background</label>
     </div>
     <div class="rendererbar">
       <label for="renderer">Renderer</label>
-      <select id="renderer"><option value="css" selected>CSS + SVG · SDF</option><option value="webgl">WebGL2 · same maps</option><option value="split">Compare both</option></select>
+      <select id="renderer">
+        <option value="css" selected>CSS + SVG · original</option>
+        <option value="webgl">WebGL2 · same maps</option>
+        <option value="split">Compare both</option>
+      </select>
       <button type="button" class="pbtn" id="reset-position">Centre glass</button>
       <label class="chk" for="reduce-transparency"><input type="checkbox" id="reduce-transparency"> Reduce transparency</label>
     </div>
-    <p id="render-status" role="status">Preparing the clean-room material…</p>
-    <div id="stage-gl" class="light" aria-label="WebGL2 comparison"><div id="glass-gl" tabindex="0" role="group" aria-label="Move the WebGL2 comparison preview with the arrow keys"></div></div>
+    <p id="render-status" role="status">Preparing the original material…</p>
+    <div id="stage-gl" class="light" aria-label="WebGL2 comparison">
+      <div id="glass-gl" tabindex="0" role="group" aria-label="Move the WebGL2 comparison preview with the arrow keys"></div>
+    </div>
+
   </div>
 
+  <!-- ═══════════ PARAMETERS ═══════════ -->
   <div class="two">
     <div class="card">
-      <h2>Optical controls</h2>
-      <div class="row"><label for="specular">Specular strength</label><output id="o-specular">0.3</output><input type="range" id="specular" min="0" max="0.8" step="0.05" value="0.3"></div>
-      <div class="row"><label for="chroma">Rim saturation</label><output id="o-chroma">2.5</output><input type="range" id="chroma" min="1" max="6" step="0.25" value="2.5"></div>
-      <div class="row"><label for="refraction">Refraction level</label><output id="o-refraction">0.85</output><input type="range" id="refraction" min="0" max="1.5" step="0.05" value="0.85"></div>
-      <div class="row"><label for="blur">Blur</label><output id="o-blur">2.5</output><input type="range" id="blur" min="0" max="16" step="0.5" value="2.5"></div>
-      <div class="row"><label for="lightAngle">Light angle</label><output id="o-lightAngle">-35°</output><input type="range" id="lightAngle" min="-180" max="180" step="5" value="-35"></div>
-      <div class="row"><label for="fill">Background opacity</label><output id="o-fill">0.08</output><input type="range" id="fill" min="0" max="0.6" step="0.01" value="0.08"></div>
-      <div class="row"><label for="dim">Dim strength</label><output id="o-dim">0.15</output><input type="range" id="dim" min="0" max="0.5" step="0.01" value="0.15"></div>
+      <h2>Parameters</h2>
+      <div class="row"><label for="specOpacity">Specular Opacity</label><output id="o-specOpacity">0.20</output>
+        <input type="range" id="specOpacity" min="0" max="1" step="0.01" value="0.20"></div>
+      <div class="row"><label for="saturation">Specular Saturation</label><output id="o-saturation">4</output>
+        <input type="range" id="saturation" min="0" max="50" step="1" value="4"></div>
+      <div class="row"><label for="refraction">Refraction Level</label><output id="o-refraction">0.70</output>
+        <input type="range" id="refraction" min="0" max="1" step="0.01" value="0.70"></div>
+      <div class="row"><label for="blur">Blur Level</label><output id="o-blur">1.0</output>
+        <input type="range" id="blur" min="0" max="40" step="0.1" value="1.0"></div>
+      <div class="row"><label for="angle">Specular Angle</label><output id="o-angle">-60°</output>
+        <input type="range" id="angle" min="-180" max="180" step="1" value="-60"></div>
+      <div class="row"><label for="glassBg">Glass Background Opacity</label><output id="o-glassBg">0.00</output>
+        <input type="range" id="glassBg" min="0" max="1" step="0.01" value="0"></div>
+      <div class="row"><label for="rgbDim">Dim Strength (RGB wash)</label><output id="o-rgbDim">0.15</output>
+        <input type="range" id="rgbDim" min="0" max="1" step="0.01" value="0.15"></div>
     </div>
+
     <div class="card">
-      <h2>Surface &amp; geometry</h2>
+      <h2>Surface &amp; Controls</h2>
       <div class="surfaces" id="surfaceBtns"></div>
-      <div class="row"><label for="bezel">Bezel width</label><output id="o-bezel">16</output><input type="range" id="bezel" min="4" max="40" step="1" value="16"></div>
-      <div class="row"><label for="thickness">Glass thickness</label><output id="o-thickness">48</output><input type="range" id="thickness" min="10" max="100" step="2" value="48"></div>
-      <div class="row"><label for="gain">Displacement gain</label><output id="o-gain">1</output><input type="range" id="gain" min="0.25" max="1.5" step="0.05" value="1"></div>
-      <div class="row"><label for="radius">Corner radius</label><output id="o-radius">18</output><input type="range" id="radius" min="0" max="160" data-limit="160" step="1" value="18"></div>
-      <div class="row"><label>Panel size</label><input type="number" aria-label="Panel width" id="width" min="80" max="640" step="2" value="340" style="flex:1;max-width:110px"><span style="color:#0006">×</span><input type="number" aria-label="Panel height" id="height" min="32" max="320" step="2" value="52" style="flex:1;max-width:110px"><span style="font-size:11px;color:var(--mut)">px</span></div>
-      <div class="presets"><span class="lbl">Product presets:</span>
-        <button class="pbtn" data-preset="navigation">Navigation / search</button><button class="pbtn" data-preset="toggle">Toggle switch</button><button class="pbtn" data-preset="slider">Slider</button><button class="pbtn" data-preset="player">Media player</button><button class="pbtn" data-preset="loupe">Loupe lens</button>
+      <div class="row"><label for="bezel">Bezel Width</label><output id="o-bezel">14</output>
+        <input type="range" id="bezel" min="0" max="100" step="1" value="14"></div>
+      <div class="row"><label for="thickness">Glass Thickness</label><output id="o-thickness">66</output>
+        <input type="range" id="thickness" min="0" max="100" step="1" value="66"></div>
+      <div class="row"><label for="scale">Scale Ratio</label><output id="o-scale">1.00</output>
+        <input type="range" id="scale" min="0" max="1" step="0.01" value="1"></div>
+      <div class="row"><label for="radius">Corner Radius</label><output id="o-radius">21</output>
+        <input type="range" id="radius" min="0" max="21" step="1" value="21"></div>
+      <div class="row"><label>Panel Size</label>
+        <input type="number" aria-label="Panel width" id="pw" min="60" max="720" step="2" value="320" style="flex:1;max-width:110px">
+        <span style="color:#0006">×</span>
+        <input type="number" aria-label="Panel height" id="ph" min="32" max="320" step="2" value="42" style="flex:1;max-width:110px">
+        <span style="font-size:11px;color:var(--mut)">px</span>
       </div>
-      <div class="presets"><span class="lbl">App panels:</span><button class="pbtn" data-preset="panelA" style="border-color:#0369a1;color:#0369a1">Type A · banner</button><button class="pbtn" data-preset="panelB" style="border-color:#0369a1;color:#0369a1">Type B · menu</button><span class="lbl" style="margin-left:auto">URL keeps your state</span></div>
+      <div class="presets">
+        <span class="lbl">Product presets:</span>
+        <button class="pbtn" data-preset="searchbox">Searchbox</button>
+        <button class="pbtn" data-preset="switch">Switch</button>
+        <button class="pbtn" data-preset="slider">Slider</button>
+        <button class="pbtn" data-preset="player">Music Player</button>
+        <button class="pbtn" data-preset="magnifier">Magnifying Glass</button>
+      </div>
+      <div class="presets">
+        <span class="lbl">App panels:</span>
+        <button class="pbtn" data-preset="panelA" style="border-color:#0369a1;color:#0369a1">Type A · banner</button>
+        <button class="pbtn" data-preset="panelB" style="border-color:#0369a1;color:#0369a1">Type B · menu</button>
+        <span class="lbl" style="margin-left:auto">URL keeps your state — copy the address bar to share a tuning</span>
+      </div>
     </div>
   </div>
 
+  <!-- ═══════════ VISUALISATIONS ═══════════ -->
   <div class="grid3">
-    <div class="card"><h3>Cross-section vectors</h3><canvas id="simCanvas"></canvas><div class="axlab"><span>Center row</span><span>decoded displacement</span></div></div>
-    <div class="card"><h3>Horizontal displacement</h3><canvas id="chartCanvas"></canvas><div class="axlab"><span>CSS px</span><span>panel width →</span></div></div>
-    <div class="card"><h3>Displacement map</h3><canvas id="mapCanvas"></canvas><div class="axlab"><span>R = X · G = Y · 128 = neutral</span><span id="mapMeta"></span></div></div>
+    <div class="card">
+      <h3>Radius Simulation</h3>
+      <canvas id="simCanvas"></canvas>
+      <div class="axlab"><span>Section</span><span>arrow = displacement · longer → more purple</span></div>
+    </div>
+    <div class="card">
+      <h3>Radius Displacements</h3>
+      <canvas id="chartCanvas"></canvas>
+      <div class="axlab"><span>Displacement (px)</span><span>Distance to border (px) →</span></div>
+    </div>
+    <div class="card">
+      <h3>Displacement Map</h3>
+      <canvas id="mapCanvas"></canvas>
+      <div class="axlab"><span>R = Δx · G = Δy · 128 = neutral</span><span id="mapMeta"></span></div>
+    </div>
   </div>
-  <div class="card"><div class="foot"><button class="btn" id="copyBtn">Copy CSS tokens</button><button class="btn" id="copyJsonBtn" style="background:#525252">Copy JSON</button><button class="btn" id="copyAppBtn" style="background:#0369a1">Copy integration tokens</button><span id="status"></span></div></div>
-  <p class="sub">Independent clean-room implementation. Technique credit and per-file origins are recorded in PROVENANCE.md.</p>
+
+  <!-- ═══════════ EXPORT ═══════════ -->
+  <div class="card">
+    <div class="foot">
+      <button class="btn" id="copyBtn">Copy CSS tokens</button>
+      <button class="btn" id="copyJsonBtn" style="background:#525252">Copy JSON</button>
+      <button class="btn" id="copyAppBtn" style="background:#0369a1">Copy integration tokens</button>
+      <span id="status"></span>
+    </div>
+  </div>
+
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
-<svg colorInterpolationFilters="sRGB" style="display:none" aria-hidden="true"><defs id="filterDefs"></defs></svg>
-<!-- Rebuild with node scripts/build-showcase.mjs. Embedded clean-room scripts and authored plates; no network dependencies. -->
-<!-- LIQUID_GLASS_SUITE_RUNTIME -->
+
+<!-- SVG filters generated by the standalone engine; development notice is in NOTICE. -->
+<svg colorInterpolationFilters="sRGB" style="display:none" aria-hidden="true">
+  <defs id="filterDefs"></defs>
+</svg>
+
+
+
+<!-- Liquid Glass Suite standalone showcase.
+  Rebuild with node scripts/build-showcase.mjs.
+  Standalone build and measured scope: shared/references/14-showcase.md and shared/references/16-sources.md.
+  Embedded artwork and scripts; no network dependencies or private project paths.
+-->
+<!-- ULTIMATE_LIQUID_GLASS_RUNTIME -->
 </body>
 </html>

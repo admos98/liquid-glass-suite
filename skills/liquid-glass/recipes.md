@@ -2,7 +2,7 @@
 
 Plain CSS first. Load `../../shared/assets/liquid-glass.css` and `.js` once, before the first surface. The HTML below is minimal; layout declarations are separate from the shipped material.
 
-Source assembly: `../../shared/references/02-css-scaffold.md` (classes, tokens, layers), `03-dim-and-rim.md` (rim scope and production values), `01-strategy-picker.md` (surface/support decisions), `04-svg-filter-graph.md` (optical rim), `11-failure-catalogue.md` (pitfalls), `12-tailwind-v4.md` (framework rules), `../../shared/assets/showcase/presets.json` (suite product tuning), and `../../shared/assets/liquid-glass.js` (clean SDF core). No optical values below come from a competitor or an assumed Apple specification.
+Source assembly: `../../shared/references/02-css-scaffold.md` (classes, tokens, layers), `03-dim-and-rim.md` (rim scope and production values), `01-strategy-picker.md` (surface/support decisions), `04-svg-filter-graph.md` (optical rim), `11-failure-catalogue.md` (pitfalls), `12-tailwind-v4.md` (framework rules), `../../shared/assets/showcase/optics.js` (original product tuning), and `../../shared/assets/liquid-glass.js` (original strategy-1 drop-in). No optical values below come from a competitor or an assumed Apple specification.
 
 ## Shared theme tokens and fallback
 
@@ -146,10 +146,10 @@ Source assembly: `../../shared/references/02-css-scaffold.md` (classes, tokens, 
 </label>
 ```
 ```css
-.glass-search { --lg-radius: 18px; display: flex; gap: 8px; padding: 7px 10px; }
+.glass-search { --lg-radius: 21px; display: flex; gap: 8px; padding: 7px 10px; }
 ```
 
-- **Classes/tokens:** `.lg-inset`; no `.lg--backdrop`, no decorative rim/sheen. `18px` aligns with the suite navigation/search tuning, while this inset recipe intentionally omits backdrop refraction.
+- **Classes/tokens:** `.lg-inset`; no `.lg--backdrop`, no decorative rim/sheen. `21px` is the restored original searchbox radius; this inset recipe intentionally omits backdrop refraction.
 - **Light/dark:** inset uses base fill `.08` white / `.65` navy; border `.28` / `.08`; flat fallback `.72` / `.88`.
 - **Fallback:** common contract for an inset well: concave inner shadow and blur remain; reduced transparency makes the well flat/opaque.
 - **Pitfall — S09:** “transparent, even the edges” indicates a zero-floored feather mask, not merely weak fill.

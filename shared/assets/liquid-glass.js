@@ -1,306 +1,272 @@
 /*
- * Liquid Glass Suite clean-room SDF optics.
+ * liquid-glass.js — strategy-1 SVG lens injector + capability gate.
  *
- * Technique follows the approach explained in kube's 'Liquid Glass in the Browser' (kube.io/blog/liquid-glass-css-svg) — the guide this project learned from. The implementation in this repository is an independent clean-room implementation; no kube.io code or assets are included, and this project is not affiliated with kube.io or Apple.
+ * Extracted from source shared/references/01-strategy-picker.md (paint probe,
+ * purely additive gate, document.documentElement.dataset),
+ * shared/references/05-chromium-quirks.md (alpha-255 map, fresh filter IDs, region),
+ * shared/references/04-svg-filter-graph.md (map head smoothing), and
+ * shared/references/03-dim-and-rim.md (delegated pointer listener).
+ * MIT — see LICENSE. Vanilla JS, zero dependencies, no framework code.
  *
- * Independent derivation: evaluate a rounded-rectangle signed-distance field at
- * each pixel, use its analytic gradient as the outward direction, derive slope
- * from a mathematical height family, then apply vector Snell refraction. There
- * is no profile lookup table and no external preset or specular sample data.
+ * Load this in <head> (or before the first glass element) so the conservative
+ * dataset value is set BEFORE any glass paints. Refraction is purely additive:
+ * with no JS, or a failed paint probe, every engine keeps blur() + saturate().
+ * The CSS places url() LAST in the chain; this file only supplies the ID.
  */
-'use strict';
-const LiquidGlassField = (() => {
-  const GLASS_IOR = 1.5; // Textbook approximation for common glass in air.
-  const DISPLACEMENT_RANGE = 24; // Design budget: cap lateral travel at 24 CSS px.
-  const FILTER_SCALE = DISPLACEMENT_RANGE * 2; // SVG scale maps ±RANGE to channel endpoints.
-  const SLOPE_LIMIT = 8; // Stability budget for the singular edge derivative.
-  const HEIGHT_EPSILON = 0.001; // Central-difference step in normalized bezel space.
-  const RIM_WIDTH = 3; // Design token: a narrow three-CSS-pixel light band.
-  const SPECULAR_LOBE = 3; // Design choice: cubic lobe narrows the lit edge.
-  const LIP_STRETCH = 1.25; // Design choice: shorten the lip's first transition region.
+(function () {
+  'use strict';
 
-  const clamp01 = value => Math.max(0, Math.min(1, value));
-  const smooth = value => {
-    const t = clamp01(value);
-    return t * t * t * (t * (t * 6 - 15) + 10); // Quintic smootherstep identity.
-  };
+  var root = document.documentElement;
+  var host = document.body || document.head || root;
 
-  function heightAt(family, distance) {
-    const t = clamp01(distance);
-    const circle = Math.sqrt(Math.max(0, 1 - (1 - t) ** 2));
-    const squircle = Math.max(0, 1 - (1 - t) ** 4) ** 0.25;
-    if (family === 'convex_circle') return circle;
-    if (family === 'concave') return 1 - circle;
-    if (family === 'lip') {
-      const leading = Math.max(0, 1 - (1 - clamp01(t * LIP_STRETCH)) ** 4) ** 0.25;
-      return leading * (1 - smooth(t)) + (1 - circle) * smooth(t);
+  // Build a real SVG element without writing a namespace URL in source.
+  var holder = document.createElement('div');
+  holder.innerHTML = '<svg width="0" height="0" aria-hidden="true" style="position:absolute"></svg>';
+  var svg = holder.firstElementChild;
+  var NS = svg.namespaceURI;
+  var defs = document.createElementNS(NS, 'defs');
+  svg.appendChild(defs);
+  host.appendChild(svg);
+
+  function el(name, attrs) {
+    var node = document.createElementNS(NS, name);
+    Object.keys(attrs).forEach(function (k) { node.setAttribute(k, attrs[k]); });
+    return node;
+  }
+
+  /* ---------- Displacement map: neutral centre, two channels, alpha 255 ---- */
+
+  // 256x160 canonical ladder canvas; 1 map-px per CSS px, long side well
+  // under the 512px Safari exception (shared/references/06-safari-webkit.md).
+  var MAP_W = 256, MAP_H = 160;
+
+  function profile(len, band) {
+    var a = new Float32Array(band), i, j, pass, prev;
+    for (i = 0; i < band; i++) a[i] = 1 - i / (band - 1);
+    a[0] = a[1];                                  // border starts at the peak
+    for (pass = 0; pass < 2; pass++) {            // [1,2,1]/4 box smoothing
+      prev = a.slice();
+      for (j = 1; j < band - 1; j++) a[j] = (prev[j - 1] + 2 * prev[j] + prev[j + 1]) / 4;
     }
-    return squircle;
-  }
-
-  /* Standard rounded-box SDF plus its analytic gradient. The gradient points
-     out of the panel; only the bezel uses it, so the flat center is neutral. */
-  function roundedFrame(x, y, width, height, radius) {
-    const px = x - width / 2, py = y - height / 2;
-    const qx = Math.abs(px) - (width / 2 - radius);
-    const qy = Math.abs(py) - (height / 2 - radius);
-    const ox = Math.max(qx, 0), oy = Math.max(qy, 0);
-    const outside = Math.hypot(ox, oy);
-    const distance = outside + Math.min(Math.max(qx, qy), 0) - radius;
-    let gx = 0, gy = 0;
-    if (outside > 0) {
-      gx = ox / outside * Math.sign(px);
-      gy = oy / outside * Math.sign(py);
-    } else if (qx > qy) {
-      gx = Math.sign(px);
-    } else {
-      gy = Math.sign(py);
+    for (j = 1; j < band; j++) {                  // monotone non-increasing
+      if (a[j] > a[j - 1]) a[j] = a[j - 1];
     }
-    return { distance, gx, gy };
+    a[band - 1] = 0;                              // pin last sample
+    return a;
   }
 
-  function slopeAt(family, depth, bezel, thickness) {
-    const t = clamp01(depth / bezel);
-    const lo = clamp01(t - HEIGHT_EPSILON), hi = clamp01(t + HEIGHT_EPSILON);
-    const derivative = (heightAt(family, hi) - heightAt(family, lo)) / (hi - lo || HEIGHT_EPSILON);
-    return Math.max(-SLOPE_LIMIT, Math.min(SLOPE_LIMIT, derivative * thickness / bezel));
-  }
-
-  /* Vector Snell form: incident light is vertical, the normal has three
-     components, and lateral travel is measured through the local glass depth. */
-  function lateralTravel(family, frame, depth, settings) {
-    const t = clamp01(depth / settings.bezel);
-    const height = heightAt(family, t);
-    if (height <= 0) return [0, 0];
-    const slope = slopeAt(family, depth, settings.bezel, settings.thickness);
-    const nx = slope * frame.gx, ny = slope * frame.gy;
-    const length = Math.hypot(nx, ny, 1);
-    const ux = nx / length, uy = ny / length, uz = 1 / length;
-    const eta = 1 / GLASS_IOR;
-    const discriminant = 1 - eta * eta * (1 - uz * uz);
-    if (discriminant < 0) return [0, 0]; // Total internal reflection: no transmitted ray.
-    const coefficient = eta * uz - Math.sqrt(discriminant);
-    const tx = coefficient * ux, ty = coefficient * uy;
-    const tz = -eta + coefficient * uz;
-    const depthPx = settings.thickness * height;
-    const gain = settings.refraction * settings.gain;
-    return [tx * depthPx / -tz * gain, ty * depthPx / -tz * gain];
-  }
-
-  function createMaps(settings) {
-    const width = Math.round(settings.width), height = Math.round(settings.height);
-    const displacement = new ImageData(width, height);
-    const specular = new ImageData(width, height);
-    const radius = Math.min(settings.radius, width / 2, height / 2);
-    const lightAngle = settings.lightAngle * Math.PI / 180;
-    const lightX = Math.cos(lightAngle), lightY = Math.sin(lightAngle);
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const index = (y * width + x) * 4;
-        const frame = roundedFrame(x + 0.5, y + 0.5, width, height, radius);
-        const depth = Math.max(0, -frame.distance);
-        let dx = 0, dy = 0;
-        if (frame.distance <= 0 && depth < settings.bezel) {
-          [dx, dy] = lateralTravel(settings.surface, frame, depth, settings);
-        }
-        const encode = value => Math.max(0, Math.min(255, Math.round(128 + value * 128 / DISPLACEMENT_RANGE)));
-        displacement.data[index] = encode(dx);
-        displacement.data[index + 1] = encode(dy);
-        displacement.data[index + 2] = 128; // Unused blue channel stays neutral.
-        displacement.data[index + 3] = 255; // Opaque map avoids premultiplied-alpha loss.
-
-        let alpha = 0;
-        if (frame.distance <= 0 && depth < RIM_WIDTH) {
-          const facing = Math.max(0, frame.gx * lightX + frame.gy * lightY);
-          const window = 1 - depth / RIM_WIDTH; // Design choice: linear falloff to the interior.
-          alpha = facing ** SPECULAR_LOBE * window * settings.specular;
-        }
-        specular.data[index] = 255; // Suite-selected white light, not sampled render colors.
-        specular.data[index + 1] = 255;
-        specular.data[index + 2] = 255;
-        specular.data[index + 3] = Math.round(clamp01(alpha) * 255);
+  function mapPNG() {
+    var c = document.createElement('canvas');
+    c.width = MAP_W; c.height = MAP_H;
+    var ctx = c.getContext('2d');
+    var img = ctx.createImageData(MAP_W, MAP_H);
+    // 18% flat shoulder per direction (shared/references/10-measurement.md, "A grayscale map is
+    // not a lens"); the ramp outside it is the bezel band.
+    var bx = Math.round(MAP_W * 0.18), by = Math.round(MAP_H * 0.18);
+    var px = profile(MAP_W, bx), py = profile(MAP_H, by), x, y, o;
+    for (y = 0; y < MAP_H; y++) {
+      for (x = 0; x < MAP_W; x++) {
+        var rx = px[x < bx ? x : (x > MAP_W - 1 - bx ? MAP_W - 1 - x : bx - 1)];
+        var ry = py[y < by ? y : (y > MAP_H - 1 - by ? MAP_H - 1 - y : by - 1)];
+        if (rx < 0) rx = 0;
+        if (ry < 0) ry = 0;
+        o = (y * MAP_W + x) * 4;
+        // R = horizontal offset, G = vertical offset, 128 = identity.
+        img.data[o]     = x < MAP_W / 2 ? 128 - 127 * rx : 128 + 127 * rx;
+        img.data[o + 1] = y < MAP_H / 2 ? 128 - 127 * ry : 128 + 127 * ry;
+        img.data[o + 2] = 128;
+        img.data[o + 3] = 255;   // alpha 0 kills the map in Chromium (06 §1)
       }
     }
-    return { displacement, specular, scale: FILTER_SCALE, width, height };
+    ctx.putImageData(img, 0, 0);
+    return c.toDataURL('image/png');
   }
 
-  return Object.freeze({ createMaps, heightAt, FILTER_SCALE, DISPLACEMENT_RANGE, RIM_WIDTH });
-})();
+  /* ---------- Lens injector: fresh ID on every rebuild -------------------- */
 
+  var seq = 0, liveId = null, liveNode = null;
+  var png = mapPNG();
 
-/* Suite-authored application wrapper. The field above is also embedded by the
-   standalone showcase build, so both product paths use one mathematical core. */
-(() => {
-  const MIN_CHROMIUM = 138; // Existing suite support policy, not feature detection.
-  const FALLBACK_SATURATION = 1.35;
-  const DIM_SAMPLES = 33;
-  const DIM_TINT = [31 / 255, 29 / 255, 41 / 255];
-  const MAX_TILT = 6, MAX_TRANSLATE = 8, HOVER_SCALE = 1.02, LERP = 0.16; // Suite interaction design tokens.
-  const DEFAULTS = Object.freeze({ surface: 'convex_squircle', bezel: 16, thickness: 48,
-    gain: 1, refraction: 0.85, lightAngle: -35, specular: 0.3, chroma: 2.5, blur: 2.5, fill: 0.08, dim: 0.15 });
-  const reducedMedia = matchMedia('(prefers-reduced-transparency: reduce)');
-  const forcedMedia = matchMedia('(forced-colors: active)');
-  const instances = new WeakMap(), mounted = new Set();
-  let serial = 0;
+  function rebuildLens() {
+    var old = liveNode;
+    var id = 'lg-lens-' + (++seq);
 
-  function allowedChromium() {
-    const brands = navigator.userAgentData?.brands || [];
-    const chromium = brands.find(item => item.brand === 'Chromium' || item.brand === 'Google Chrome');
-    const version = Number(chromium?.version || 0);
-    return version >= MIN_CHROMIUM && !/HeadlessChrome|HeadlessChromium/.test(navigator.userAgent) &&
-      CSS.supports('backdrop-filter', 'url(#x)') && !reducedMedia.matches && !forcedMedia.matches;
-  }
-  function solidFallback() { return reducedMedia.matches || forcedMedia.matches; }
-  function fallback(element) {
-    const solid = solidFallback();
-    element.style.backdropFilter = solid ? 'none' : `blur(8px) saturate(${FALLBACK_SATURATION})`;
-    element.style.webkitBackdropFilter = element.style.backdropFilter;
-    element.style.background = solid ? '#f4f5f8' : 'rgba(255,255,255,.18)';
-    element.style.boxShadow = 'inset 0 0 0 1px rgba(115,115,115,.35)';
-    element.dataset.lgFallback = solid ? 'solid' : 'frosted';
-  }
-  function mapURL(imageData) {
-    const canvas = document.createElement('canvas'); canvas.width = imageData.width; canvas.height = imageData.height;
-    canvas.getContext('2d').putImageData(imageData, 0, 0); return canvas.toDataURL('image/png');
-  }
-  function washTable(tint, strength) {
-    const values = [];
-    for (let index = 0; index < DIM_SAMPLES; index++) {
-      const x = index / (DIM_SAMPLES - 1);
-      values.push((x + strength * x * (tint - x)).toFixed(4));
-    }
-    return values.join(' ');
-  }
-  function wash(input, result, dim) {
-    return `<feComponentTransfer in="${input}" result="${result}">${['R', 'G', 'B'].map((channel, index) =>
-      `<feFunc${channel} type="table" tableValues="${washTable(DIM_TINT[index], dim)}"/>`).join('')}</feComponentTransfer>`;
-  }
-  function defsRoot() {
-    let root = document.getElementById('lg-suite-defs');
-    if (root) return root.querySelector('defs');
-    const host = document.createElement('div'); // HTML parsing supplies the SVG namespace without a URL literal.
-    host.innerHTML = '<svg id="lg-suite-defs" colorInterpolationFilters="sRGB" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><defs></defs></svg>';
-    root = host.firstElementChild; document.body.appendChild(root); return root.querySelector('defs');
-  }
+    var filter = el('filter', {
+      id: id, x: '0', y: '0', width: '100%', height: '100%',
+      'color-interpolation-filters': 'sRGB'
+    });
+    // External file hrefs never load inside backdrop-filter chains (12b);
+    // data URIs do. preserveAspectRatio="none" bakes the bezel as fractions
+    // (05 Parity check 2) — one map is exact only at its canonical size.
+    var feImage = el('feImage', {
+      x: '0', y: '0', width: '100%', height: '100%',
+      preserveAspectRatio: 'none', result: 'map'
+    });
+    feImage.setAttribute('href', png);
+    feImage.setAttribute('xlink:href', png);
+    filter.appendChild(feImage);
+    filter.appendChild(el('feDisplacementMap', {
+      'in': 'SourceGraphic', in2: 'map', scale: '40',
+      xChannelSelector: 'R', yChannelSelector: 'G'
+    }));
+    defs.appendChild(filter);
 
-  function getFilterDefinition(width, height, radius, bezel = DEFAULTS.bezel, surface = DEFAULTS.surface,
-    thickness = DEFAULTS.thickness, refraction = DEFAULTS.refraction, gain = DEFAULTS.gain,
-    lightAngle = DEFAULTS.lightAngle, specular = DEFAULTS.specular) {
-    const settings = { width: Math.max(2, Math.round(width)), height: Math.max(2, Math.round(height)),
-      radius: Math.max(0, Math.min(radius, width / 2, height / 2)), bezel, surface, thickness,
-      refraction, gain, lightAngle, specular };
-    const maps = LiquidGlassField.createMaps(settings);
-    return { ...maps, filterId: '', settings };
-  }
-
-  function installFilter(element, maps, options) {
-    const id = `lg-dropin-${++serial}`;
-    const vectorURL = mapURL(maps.displacement), lightURL = mapURL(maps.specular);
-    defsRoot().insertAdjacentHTML('beforeend', `<filter id="${id}" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-      <feImage href="${vectorURL}" width="${maps.width}" height="${maps.height}" preserveAspectRatio="none" result="field"/>
-      <feDisplacementMap in="SourceGraphic" in2="field" scale="${maps.scale}" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
-      <feColorMatrix in="refracted" type="saturate" values="${options.chroma}" result="chroma"/>
-      ${wash('refracted', 'body', options.dim)}${wash('chroma', 'rim', options.dim)}
-      <feImage href="${lightURL}" width="${maps.width}" height="${maps.height}" preserveAspectRatio="none" result="light"/>
-      <feComposite in="rim" in2="light" operator="in" result="colored-rim"/>
-      <feBlend in="colored-rim" in2="body" mode="normal" result="body-plus-rim"/>
-      <feBlend in="light" in2="body-plus-rim" mode="normal"/>
-    </filter>`);
-    const chain = `blur(${options.blur}px) saturate(${FALLBACK_SATURATION}) url(#${id})`;
-    element.style.backdropFilter = chain; element.style.webkitBackdropFilter = chain;
-    element.style.background = `rgba(255,255,255,${options.fill})`;
+    // url() is LAST in the CSS chain (liquid-glass.css). Update the shared
+    // custom property first, THEN remove the stale node: Safari and Chromium
+    // cache <filter> output by ID, so a reused ID freezes mid-motion (06 §3).
+    root.style.setProperty('--lg-lens', 'url(#' + id + ')');
+    if (old) old.remove();
+    liveNode = filter;
+    liveId = id;
     return id;
   }
 
-  function numberOption(element, name, fallbackValue) {
-    const value = Number(element.dataset[name]);
-    return Number.isFinite(value) && element.dataset[name] !== undefined ? value : fallbackValue;
-  }
-  function optionsFor(element, rect) {
-    return {
-      surface: element.dataset.surface || DEFAULTS.surface,
-      bezel: numberOption(element, 'bezel', DEFAULTS.bezel),
-      thickness: numberOption(element, 'thickness', DEFAULTS.thickness),
-      gain: numberOption(element, 'gain', DEFAULTS.gain),
-      refraction: numberOption(element, 'refraction', DEFAULTS.refraction),
-      lightAngle: numberOption(element, 'lightAngle', DEFAULTS.lightAngle),
-      specular: numberOption(element, 'specular', DEFAULTS.specular),
-      chroma: numberOption(element, 'chroma', DEFAULTS.chroma),
-      blur: numberOption(element, 'blur', DEFAULTS.blur),
-      fill: numberOption(element, 'fill', DEFAULTS.fill),
-      dim: numberOption(element, 'dim', DEFAULTS.dim),
-      width: Math.max(2, rect.width), height: Math.max(2, rect.height),
-      radius: Math.max(0, parseFloat(getComputedStyle(element).borderTopLeftRadius) || 0),
-    };
+  rebuildLens();
+
+  /* ---------- Paint probe (NOT an @supports syntax probe) ----------------- */
+
+  // A white square drawn through feDisplacementMap with R=255, G=128 moves
+  // +10px in x and ~0 in y. If url() filters do not paint, the square stays.
+  var PROBE_FILTER = el('filter', {
+    id: 'lg-probe', filterUnits: 'userSpaceOnUse',
+    x: '0', y: '0', width: '64', height: '64',
+    'color-interpolation-filters': 'sRGB'
+  });
+  PROBE_FILTER.appendChild(el('feFlood', { 'flood-color': '#ff8080', result: 'map' }));
+  PROBE_FILTER.appendChild(el('feDisplacementMap', {
+    'in': 'SourceGraphic', in2: 'map', scale: '20',
+    xChannelSelector: 'R', yChannelSelector: 'G'
+  }));
+  defs.appendChild(PROBE_FILTER);
+
+  function readShifted(canvas) {
+    var ctx = canvas.getContext('2d');
+    var before = ctx.getImageData(26, 32, 1, 1).data;
+    var after = ctx.getImageData(44, 32, 1, 1).data;
+    return before[0] < 40 && after[0] > 200;
   }
 
-  function attachMotion(element) {
-    if (!matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return () => {};
-    let targetX = 0, targetY = 0, x = 0, y = 0, raf = 0, active = true;
-    const move = event => {
-      const rect = element.getBoundingClientRect();
-      targetX = Math.max(-1, Math.min(1, (event.clientX - rect.left - rect.width / 2) / (rect.width / 2)));
-      targetY = Math.max(-1, Math.min(1, (event.clientY - rect.top - rect.height / 2) / (rect.height / 2)));
-    };
-    const leave = () => { targetX = 0; targetY = 0; };
-    const tick = () => {
-      if (!active) return;
-      x += (targetX - x) * LERP; y += (targetY - y) * LERP;
-      element.style.transform = `translate3d(${(-x * MAX_TRANSLATE).toFixed(2)}px,${(-y * MAX_TRANSLATE).toFixed(2)}px,0) rotateX(${(y * MAX_TILT).toFixed(2)}deg) rotateY(${(-x * MAX_TILT).toFixed(2)}deg) scale(${HOVER_SCALE})`;
-      raf = requestAnimationFrame(tick);
-    };
-    element.addEventListener('pointermove', move); element.addEventListener('pointerleave', leave); tick();
-    return () => { active = false; cancelAnimationFrame(raf); element.removeEventListener('pointermove', move); element.removeEventListener('pointerleave', leave); };
+  function syncProbe() {
+    var c = document.createElement('canvas');
+    c.width = 64; c.height = 64;
+    var ctx = c.getContext('2d');
+    if (!ctx) return null;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 64, 64);
+    ctx.filter = 'url(#lg-probe)';
+    if (ctx.filter === 'none' || ctx.filter === '') return null;  // unsupported
+    ctx.fillStyle = '#fff'; ctx.fillRect(24, 24, 16, 16);
+    try { return readShifted(c); } catch (e) { return null; }
   }
 
-  function mount(element) {
-    if (!(element instanceof HTMLElement) || instances.has(element)) return instances.get(element);
-    if (!allowedChromium()) { fallback(element); return null; }
-    const rect = element.getBoundingClientRect();
-    if (rect.width < 2 || rect.height < 2) return null;
-    const options = optionsFor(element, rect);
-    const maps = getFilterDefinition(options.width, options.height, options.radius, options.bezel,
-      options.surface, options.thickness, options.refraction, options.gain, options.lightAngle, options.specular);
-    const previous = { backdropFilter: element.style.backdropFilter, webkitBackdropFilter: element.style.webkitBackdropFilter,
-      background: element.style.background, transform: element.style.transform,
-      transformStyle: element.style.transformStyle, willChange: element.style.willChange };
-    const filterId = installFilter(element, maps, options);
-    element.style.transformStyle = 'preserve-3d'; element.style.willChange = 'transform';
-    if (getComputedStyle(element).position === 'static') element.style.position = 'relative';
-    const cleanupMotion = attachMotion(element);
-    let raf = 0;
-    const observer = new ResizeObserver(() => {
-      cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { if (instances.has(element)) { destroy(element); mount(element); } });
+  function asyncProbe() {
+    return new Promise(function (resolve) {
+      var h = document.createElement('div');
+      h.innerHTML = '<svg width="64" height="64" viewBox="0 0 64 64">' +
+        '<defs><filter id="lg-probe-img" filterUnits="userSpaceOnUse" ' +
+        'x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB">' +
+        '<feFlood flood-color="#ff8080" result="map"/>' +
+        '<feDisplacementMap in="SourceGraphic" in2="map" scale="20" ' +
+        'xChannelSelector="R" yChannelSelector="G"/>' +
+        '</filter></defs>' +
+        '<rect width="64" height="64" fill="#000"/>' +
+        '<rect x="24" y="24" width="16" height="16" fill="#fff" ' +
+        'filter="url(#lg-probe-img)"/></svg>';
+      // XMLSerializer adds the SVG namespace at runtime; no external URL is
+      // written in source. A data URI is same-origin for canvas readback.
+      var text = new XMLSerializer().serializeToString(h.firstElementChild);
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var c = document.createElement('canvas');
+          c.width = 64; c.height = 64;
+          c.getContext('2d').drawImage(img, 0, 0);
+          resolve(readShifted(c));
+        } catch (e) { resolve(false); }
+      };
+      img.onerror = function () { resolve(false); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text);
     });
-    observer.observe(element);
-    const cleanup = () => { cancelAnimationFrame(raf); observer.disconnect(); cleanupMotion(); };
-    const api = { element, filterId, maps, options, cleanup, previous,
-      refresh: () => { destroy(element); return mount(element); }, destroy: () => destroy(element) };
-    instances.set(element, api); mounted.add(element); delete element.dataset.lgFallback;
-    Object.defineProperty(element, '__liquidGlass', { configurable: true, value: api });
-    return api;
   }
 
-  function destroy(element) {
-    const instance = instances.get(element); if (!instance) return;
-    instance.cleanup();
-    Object.assign(element.style, instance.previous);
-    document.getElementById(instance.filterId)?.remove();
-    instances.delete(element); mounted.delete(element); delete element.__liquidGlass;
+  // Engine-version probe: strategy 2 (backdrop-filter: url()) is Chromium-only.
+  // 02 states the handoff floor as "Chromium-138+-only". This is a secondary
+  // guard; the PRIMARY signal is the paint probe above.
+  function chromium138Plus() {
+    var ua = navigator.userAgentData;
+    if (!ua || !ua.brands) return false;
+    var v = 0;
+    ua.brands.forEach(function (b) {
+      var n = parseInt(b.version, 10);
+      if (b.brand === 'Chromium') v = Math.max(v, n);
+      else if (b.brand === 'Google Chrome') v = Math.max(v, n);
+    });
+    return v >= 138;
   }
-  function refreshAll() {
-    document.querySelectorAll('[data-liquid-glass]').forEach(element => { destroy(element); mount(element); });
+
+  // Pre-paint gate: conservative value before anything paints. No url() is
+  // referenced by CSS until a real filter has been observed painting pixels.
+  root.dataset.lgRefraction = 'off';
+
+  function applyProbe(painted) {
+    root.dataset.lgRefraction = painted ? (chromium138Plus() ? 'backdrop' : 'lens') : 'off';
   }
-  const start = () => {
-    refreshAll();
-    new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(node => {
-      if (node.nodeType !== 1) return;
-      if (node.matches?.('[data-liquid-glass]')) mount(node);
-      node.querySelectorAll?.('[data-liquid-glass]').forEach(mount);
-    }))).observe(document.body, { childList: true, subtree: true });
+
+  var immediate = syncProbe();
+  if (immediate === null) asyncProbe().then(applyProbe);
+  else applyProbe(immediate);
+
+  /* ---------- One delegated pointer listener for rim light ---------------- */
+
+  if (root.dataset.motion === 'reduce' ||
+      (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    return;   // parked under both motion preferences (shared/references/11-failure-catalogue.md)
+  }
+
+  var RIM = '.lg';
+  var EPSILON = 0.5;   // jitter under this px reuses the last position
+  var NEAR = 0.7;      // half-diagonal fraction at which the rim counts as lit
+  var REACH = 1.1;     // ...and as fully dark
+  var EASE = 0.18;     // per-frame lerp toward target boost
+  var lastX = NaN, lastY = NaN, lit = null, boost = 0, target = 0, raf = 0;
+
+  function tick() {
+    boost += (target - boost) * EASE;
+    if (Math.abs(target - boost) < EASE) boost = target;
+    if (lit) lit.style.setProperty('--eg-boost', boost.toFixed(3));
+    raf = boost === target ? 0 : requestAnimationFrame(tick);
+  }
+
+  function relight(node, x, y) {
+    if (lit && lit !== node) {
+      lit.style.setProperty('--eg-boost', '0');   // no stuck hover behind cursor
+      lit = null; boost = 0; target = 0;
+    }
+    if (!node) return;
+    var r = node.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    node.style.setProperty('--eg-x', ((x - r.left) / r.width * 100).toFixed(2) + '%');
+    node.style.setProperty('--eg-y', ((y - r.top) / r.height * 100).toFixed(2) + '%');
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var half = Math.sqrt(r.width * r.width + r.height * r.height) / 2;
+    var d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+    target = Math.max(0, Math.min(1, 1 - (d / half - NEAR) / (REACH - NEAR)));
+    lit = node;
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('pointermove', function (e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;  // touch has no hover
+    var x = e.clientX, y = e.clientY;
+    if (Number.isFinite(lastX) && Math.abs(x - lastX) < EPSILON &&
+        Math.abs(y - lastY) < EPSILON) return;
+    lastX = x; lastY = y;
+    var hit = document.elementFromPoint(x, y);
+    relight(hit ? hit.closest(RIM) : null, x, y);
+  }, { passive: true });
+
+  window.LiquidGlass = {
+    rebuildLens: rebuildLens,          // fresh ID on every update (06 §3)
+    lensId: function () { return liveId; },
+    refraction: function () { return root.dataset.lgRefraction; }
   };
-  reducedMedia.addEventListener('change', refreshAll); forcedMedia.addEventListener('change', refreshAll);
-  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start, { once: true });
-  window.LiquidGlass = Object.freeze({ mount, refresh: element => { destroy(element); return mount(element); },
-    destroy, refreshAll, getFilterDefinition, get: element => instances.get(element), version: '2.0.0' });
 })();

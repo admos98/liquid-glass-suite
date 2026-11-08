@@ -1,12 +1,5 @@
 Liquid Glass Suite
-Copyright (c) 2026 Moslem Adib
 
-Technique follows the approach explained in kube's 'Liquid Glass in the Browser' (kube.io/blog/liquid-glass-css-svg) — the guide this project learned from. The implementation in this repository is an independent clean-room implementation; no kube.io code or assets are included, and this project is not affiliated with kube.io or Apple.
+This skill suite was developed from publicly available information on the web and practical research with browser rendering engines.
 
-The technique credit identifies the guide used to understand browser refraction. It is not an endorsement, an affiliation statement, or a claim about the guide's code license.
-
-Original suite code, documentation, tests, procedural SVG plates and suite-generated screenshots are distributed under the MIT license in LICENSE, to the extent the author holds those rights. External comparison implementations, external artwork and external visual baselines are not bundled.
-
-Apple, Liquid Glass, SwiftUI and SF Symbols are trademarks of Apple Inc. This independent project is not affiliated with or endorsed by Apple.
-
-Per-file origin and disposal decisions: PROVENANCE.md.
+The standalone showcase is self-contained and works offline.

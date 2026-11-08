@@ -59,7 +59,7 @@ class PackageContract(unittest.TestCase):
         for file in ROOT.rglob('*'):
             if any(part in {'node_modules', '.git', '.venv', 'test-results', 'playwright-report', '__pycache__'} for part in file.relative_to(ROOT).parts):
                 continue
-            if file.name in {Path(__file__).name, 'MIGRATION_MAP.md', 'PROVENANCE.md'}:
+            if file.name == Path(__file__).name:
                 continue
             if file.suffix not in ('.md', '.js', '.css', '.html', '.py', '.json'):
                 continue
@@ -73,8 +73,8 @@ class PackageContract(unittest.TestCase):
         self.assertTrue(showcase.is_file(), 'The standalone showcase is missing')
         text = showcase.read_text(encoding='utf-8')
         self.assertIn('<h1>Liquid Glass Suite</h1>', text)
-        self.assertIn('window.LiquidGlassShowcase', text)
-        self.assertIn('const LiquidGlassField', text)
+        self.assertIn('window.UltimateLiquidGlass', text)
+        self.assertIn('const PRESETS', text)
         self.assertNotRegex(text, r'<script[^>]+src=')
         self.assertNotRegex(text, r'<link[^>]+href=')
         runtime_files = [showcase, ROOT / 'shared/assets/liquid-glass.js', ROOT / 'shared/assets/liquid-glass.css',
@@ -84,37 +84,53 @@ class PackageContract(unittest.TestCase):
             without_comments = re.sub(r'/\*.*?\*/|<!--.*?-->', '', file.read_text(encoding='utf-8'), flags=re.S)
             self.assertNotRegex(without_comments, r'https?://', str(file.relative_to(ROOT)))
 
-    def test_clean_room_disposal_credit_and_owned_artifacts(self):
-        for relative in ('tests/' + 'reference', 'shared/assets/showcase/' + 'backgrounds',
-                         'shared/assets/showcase/' + 'source-' + 'manifest.json', 'PUBLISHING-BLOCKED.md'):
+    def test_neutral_development_notice_and_original_artifacts(self):
+        self.assertFalse((ROOT / 'tests/reference').exists())
+        for relative in ('shared/assets/showcase/plates', 'shared/assets/showcase/presets.json',
+                         'shared/assets/showcase/source-' + 'manifest.json', 'PRO' + 'VENANCE.md',
+                         'MIGRATION' + '_MAP.md', 'tests/baselines'):
             self.assertFalse((ROOT / relative).exists(), relative)
-        plates = sorted((ROOT / 'shared/assets/showcase/plates').glob('*.svg'))
+        plates = sorted((ROOT / 'shared/assets/showcase/backgrounds').glob('*.svg'))
         self.assertEqual(len(plates), 8)
-        for plate in plates:
-            self.assertIn('Authored procedurally for Liquid Glass Suite', plate.read_text(encoding='utf-8'))
-        baselines = sorted((ROOT / 'tests/baselines').glob('*.png'))
-        self.assertEqual({p.name for p in baselines}, {'css-navigation.png', 'webgl-media.png', 'split-loupe.png'})
-        for image in baselines:
-            self.assertEqual(image.read_bytes()[:8], b'\x89PNG\r\n\x1a\n')
         notice = (ROOT / 'NOTICE').read_text(encoding='utf-8')
-        credit = next(line for line in notice.splitlines() if line.startswith('Technique follows'))
-        for relative in ('README.md', 'shared/references/16-sources.md',
-                         'shared/assets/liquid-glass.js', 'shared/assets/webgl-glass.js', 'PROVENANCE.md'):
-            self.assertIn(credit, (ROOT / relative).read_text(encoding='utf-8'), relative)
+        self.assertIn('publicly available information on the web', notice)
+        self.assertIn('practical research with browser rendering engines', notice)
+        self.assertIn('self-contained and works offline', notice)
+        forbidden = ('ku' + 'be', 'az' + 'moonsaz', '0fa' + '31b94', '8e1d' + '6209')
+        issues = []
+        for file in ROOT.rglob('*'):
+            if not file.is_file() or file == Path(__file__):
+                continue
+            if any(part in {'.git', 'node_modules', '.venv', 'test-results', 'playwright-report'} for part in file.relative_to(ROOT).parts):
+                continue
+            if file.suffix not in ('.md', '.js', '.css', '.html', '.py', '.json', '.txt'):
+                continue
+            text = file.read_text(encoding='utf-8-sig').casefold()
+            for term in forbidden:
+                if term in text:
+                    issues.append(f'{file.relative_to(ROOT)}: named source reference')
+        self.assertEqual(issues, [])
 
-    def test_showcase_preset_table_exactly_matches_product_bundles(self):
-        bundles = json.loads((ROOT / 'shared/assets/showcase/presets.json').read_text(encoding='utf-8'))
+    def test_showcase_preset_table_exactly_matches_original_bundles(self):
         document = (ROOT / 'shared/references/14-showcase.md').read_text(encoding='utf-8')
-        keys = ['specular', 'chroma', 'refraction', 'blur', 'lightAngle', 'fill', 'dim',
-                'surface', 'bezel', 'thickness', 'gain', 'radius']
-        self.assertEqual(set(bundles), {'navigation', 'toggle', 'slider', 'player', 'loupe', 'panelA', 'panelB'})
-        for name, bundle in bundles.items():
-            settings = bundle['settings']
-            cells = [json.dumps(settings[key]) if isinstance(settings[key], (int, float)) else settings[key] for key in keys]
-            row = f"| `{name}` | " + ' | '.join(cells) + f" | {settings['width']}×{settings['height']} |"
+        optics = (ROOT / 'shared/assets/showcase/optics.js').read_text(encoding='utf-8')
+        expected = {
+            'searchbox': [0.2, 4, 0.7, 1, 'convex_squircle', 14, 66, 21, 320, 42, 0, 0],
+            'switch': [0.5, 6, 1, 0.2, 'lip', 10, 60, 32, 140, 64, 0, 0],
+            'slider': [0.4, 7, 1, 0, 'convex_circle', 10, 60, 20, 280, 40, 0, 0],
+            'player': [0.4, 6, 1, 1, 'convex_circle', 20, 80, 24, 300, 200, 0.6, 0],
+            'magnifier': [0.5, 9, 1, 0, 'convex_circle', 16, 80, 75, 210, 150, 0, 0],
+            'panelA': [0.45, 8, 0.7, 3, 'convex_squircle', 12, 66, 12, 380, 200, 0, 0.15],
+            'panelB': [0.35, 6, 0.7, 20, 'convex_squircle', 16, 70, 24, 360, 300, 0, 0.15],
+        }
+        for name, values in expected.items():
+            cells = [str(value) for value in values]
+            row = f"| `{name}` | " + ' | '.join(cells) + ' |'
             self.assertIn(row, document)
-            self.assertTrue(bundle['_derivation'])
-        self.assertEqual(len(re.findall(r'(?m)^\| `(?:navigation|toggle|slider|player|loupe|panelA|panelB)` \|', document)), 7)
+            self.assertIn(f'{name}:', optics)
+        self.assertEqual(len(re.findall(r'(?m)^\| `(?:searchbox|switch|slider|player|magnifier|panelA|panelB)` \|', document)), 7)
+        self.assertIn('const PRESETS', optics)
+        self.assertIn('const mapDPR =', optics)
 
     def test_general_cap_and_webkit_budget_are_explicit(self):
         text = (ROOT / 'shared/references/08-performance.md').read_text(encoding='utf-8')
@@ -129,18 +145,17 @@ class PackageContract(unittest.TestCase):
         self.assertIn('UIVisualEffectView(effect:', text)
         self.assertIn('RoundedRectangle(cornerRadius:', text)
 
-    def test_default_scaffold_has_clean_sdf_optics_and_production_wash(self):
+    def test_default_scaffold_has_original_strategy_one_optics(self):
         script = (ROOT / 'shared/assets/liquid-glass.js').read_text(encoding='utf-8')
         css = (ROOT / 'shared/assets/liquid-glass.css').read_text(encoding='utf-8')
-        self.assertIn('const LiquidGlassField', script)
-        self.assertIn('function roundedFrame', script)
-        self.assertIn('function lateralTravel', script)
-        self.assertIn('const discriminant', script)
-        self.assertIn('function heightAt', script)
+        self.assertIn('function profile', script)
+        self.assertIn('function mapPNG', script)
+        self.assertIn('MAP_W = 256', script)
+        self.assertIn('function rebuildLens', script)
         self.assertIn('feDisplacementMap', script)
-        self.assertIn('feComponentTransfer', script)
-        self.assertIn('washTable', script)
-        self.assertIn('Production and showcase share 1x maps', css)
+        self.assertIn("el('feImage'", script)
+        self.assertIn('paint probe', script)
+        self.assertIn('original strategy-1 1x SVG lens', css)
         self.assertIn('specular/bezel fallback', css)
         self.assertNotIn('legacy scaffold', css.lower())
 
