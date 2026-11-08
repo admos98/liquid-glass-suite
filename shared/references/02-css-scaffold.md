@@ -60,7 +60,7 @@ Rendered ONCE at app root:
 
 The `feImage` is a displacement map: red channel = X offset, green = Y offset. Gradient rects hugging each edge encode "pull inward"; centre = no displacement. `shared/assets/liquid-glass.js` injects an equivalent graph with an alpha-255 PNG map and a fresh ID per rebuild. → see shared/references/05-chromium-quirks.md §1, §3.
 
-Support: Chromium yes; Safari 18/19 and Firefox no for `url()` in `backdrop-filter` → they get the fallback. Layers 2–3 carry the effect everywhere; displacement is the Chromium cherry. → see shared/references/01-strategy-picker.md §2.
+Support: Chromium yes for `url()` in `backdrop-filter`; untested Safari/Firefox targets get the fallback (frost guaranteed — the bend is confirmed on the owner-tested iPhone Safari; verify on target versions). Layers 2–3 carry the effect everywhere; displacement is the Chromium cherry. → see shared/references/01-strategy-picker.md §2.
 
 ### Layer 2 — specular highlight (sells "glass" on every browser)
 
@@ -228,7 +228,7 @@ Conditional copies hide under `prefers-reduced-motion`, `forced-colors`, and dat
 ## §7 Session notes (generalized from a real React/Tailwind v4 RTL app)
 
 - **CSS architecture** — the displacement filter SVG lives at app root via a `<GlassFilters/>` component. Sheen is a JS-driven CSS variable (`--lg-sheen-x/y`) updated via `mousemove` + `requestAnimationFrame` (throttled); a wrapper component handles it with no per-render overhead.
-- **Browser reality** — Safari does NOT support `backdrop-filter: url(#svg)`; displacement falls through to `blur() saturate()`, while specular + bezel carry the glass look on every browser. → see shared/references/06-safari-webkit.md §1.
+- **Browser reality** — `backdrop-filter: url(#svg)` is blocked in documented WebKit behaviour (bug 245510), so untested Safari versions fall through to `blur() saturate()`, while specular + bezel carry the glass look on every browser. Frost is the guaranteed floor; the bend is confirmed on the owner-tested iPhone Safari (2026-11-08) — verify on the target version. → see shared/references/06-safari-webkit.md §1.
 - **Alias pattern** — legacy `.glass-1/2/3` classes aliased via `@apply lg / lg-strong / lg-dark` so existing pages upgrade in a single sed pass without touching component files. In Tailwind v4, legacy aliases must inline full declarations, not `@apply`. → see shared/references/12-tailwind-v4.md §Cascade traps.
 - **Perf budget** — `.lg-strong` (displacement) on only modals/drawers/sidebars. Static cards use `.lg`. A page full of displacement-backed cards visibly janks on mid-tier laptops. → see shared/references/08-performance.md §Viewport gate.
 - **Tailwind v4 gotcha** — `color-mix()` inside `@theme` values works, but arbitrary-value colour functions in `className=` (`bg-[color-mix(...)]`) are unreliable in JIT. Put computed colours in CSS custom properties under `@theme` and reference via `var(--token)`.

@@ -24,4 +24,4 @@ This contract defines the current standalone showcase behavior. “Standalone”
 
 Browser evidence is from the named Chromium runtime with software WebGL2. The suite compares WebGL output before and after changing this showcase's own optical state only to prove that drawing changes; it does not compare against an external implementation or image.
 
-The final transcript is in `tests/evidence/verification.txt`. Real Safari/iPhone, native Apple runtimes, and Claude CLI validation are not claimed.
+The final transcript is in `tests/evidence/verification.txt`. Native Apple runtimes are not claimed. Owner-tested 2026-11-08: the standalone showcase served over HTTP and opened in mobile Safari on a physical iPhone renders the bend and works perfectly (iOS/Safari versions not recorded), and Claude Code 2.1.319 completed the marketplace install with strict manifest validation — see `tests/evidence/verification.txt`.

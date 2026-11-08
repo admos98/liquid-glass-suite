@@ -1,28 +1,32 @@
 # Safari and WebKit
 
-Purpose: the engine wall, the device-measured iOS field reports, and the two source claims that contradict each other.
+Purpose: the measured Safari/WebKit position — the open WebKit bug, the device-measured iOS field reports, the owner-tested iPhone showcase result, and the two source claims that contradict each other.
 
 Read when: a report names Safari, iOS, iPhone, WebKit, or "works in Chrome broken on iPhone".
 Skip if: the defect is Chromium-only (→ 05-chromium-quirks.md) or you are picking a strategy (→ 01-strategy-picker.md).
 
 Summary:
-- `backdrop-filter: url(#f)` silently renders nothing in WebKit (bug 245510) and paints nothing in Firefox; `@supports` returns true and lies.
-- Three paths in Safari: bend live DOM with `filter: url(#f)`; bend the backdrop with WebGL only; `backdrop-filter: url(#f)` has no fallback.
+- `backdrop-filter: url(#f)` silently renders nothing in WebKit (bug 245510) and paints nothing in Firefox; `@supports` returns true and lies. Owner-tested 2026-11-08: the standalone showcase renders the bend on a physical iPhone in mobile Safari — behaviour is version- and renderer-dependent, and frost remains the guaranteed floor on untested configurations.
+- Three paths in Safari: bend live DOM with `filter: url(#f)`; bend the backdrop with WebGL; `backdrop-filter: url(#f)` has no fallback you can rely on.
 - Safari caches `<filter>` output by ID → mint a fresh ID on every update.
 - A CSS-animation-promoted child drops out of an ancestor's `filter: url()`; `will-change: transform` alone is enough.
 - Pin long-lived fixed layers to `height: 100lvh`; `drawImage(webgl→2D)` is a CPU readback on WebKit.
 
-## §1 The headline bug
+## §1 The headline bug — and the owner-tested iPhone result
 
 [WebKit 245510](https://bugs.webkit.org/show_bug.cgi?id=245510), open since 2022, still reproducing as of a June 2026 repro: `backdrop-filter: url(#some-svg-filter)` silently renders nothing. Every iOS browser is WebKit. Firefox parses the `url()` grammar and paints nothing too, so `@supports` returns true and lies.
+
+**That wall assumption is superseded for one tested configuration.** Owner-tested 2026-11-08: the standalone `shared/assets/showcase.html`, served over HTTP and opened in mobile Safari on a physical iPhone, **renders the refraction/bend and works perfectly**. iOS/Safari versions were not recorded. The owner's report does not record which internal rendering path produced the bend — under the showcase's conservative Chromium gate the CSS+SVG path resolves to frost on non-Chromium engines, so treat the bend on that device as coming from a path that actually ran there (the WebGL2 renderer is the selectable true-refraction route on WebKit), not as proof that `backdrop-filter: url(#f)` paints on WebKit. What the result does prove: iOS Safari is not frost-only in practice, and the blanket assumption this reference used to document was wrong on real hardware.
+
+Measured position: **frost guaranteed; bend confirmed on owner-tested iPhone Safari; verify on target versions.** Behaviour is version- and renderer-dependent; the frosted fallback remains the floor on every untested configuration. Playwright WebKit is not a real iPhone — the owner's device behaved differently from the assumed wall, so cite that evidence: real-device testing outranks emulation. → see tests/evidence/verification.txt.
 
 | What you want | Path |
 |---|---|
 | Bend live DOM content | `filter: url(#f)` on the content (strategy 1) — works |
-| Bend the backdrop | WebGL shader only (strategy 3) — the *only* true refraction in Safari |
-| `backdrop-filter: url(#f)` | renders nothing — no fallback exists, because there is nothing to fall back *to* |
+| Bend the backdrop | WebGL shader (strategy 3) — the reliable true refraction in Safari |
+| `backdrop-filter: url(#f)` | no dependable fallback — 245510 remains the documented behaviour until the target version is tested |
 
-State this as expected output in the handoff; do not "discover" the missing bend after shipping. → see shared/references/01-strategy-picker.md §2.
+State this as expected output in the handoff; do not "discover" the missing bend after shipping — and do not promise one until the target version renders it. → see shared/references/01-strategy-picker.md §2.
 
 ## §2 Safari caches `<filter>` output by ID
 
@@ -75,4 +79,4 @@ Source `04-squircles` calls `-apple-visual-effect: -apple-system-glass-material`
 
 ## §7 Known source conflict, flagged honestly
 
-An older note in source `03-dim-and-rim.md` ("`backdrop-filter: url(#f)` is SAFARI-ONLY — in Chrome it silently does nothing", with "Firefox deletes the SVG reference itself") claimed the opposite direction from WebKit 245510 and the later, device-measured repro. Its mechanism notes are kept in → see shared/references/01-strategy-picker.md §1 and shared/references/03-dim-and-rim.md §Appendix. Its support claim is **not** adopted: treat *both* historical claims as suspect, verify on a real device before shipping either direction, and never let `@supports` be your evidence. Where this skill states a direction, it is backed by the open WebKit bug and the June 2026 repro, not by either archived note. → see shared/references/15-honesty-and-checklists.md §Conflicts kept visible.
+An older note in source `03-dim-and-rim.md` ("`backdrop-filter: url(#f)` is SAFARI-ONLY — in Chrome it silently does nothing", with "Firefox deletes the SVG reference itself") claimed the opposite direction from WebKit 245510 and the later, device-measured repro. Its mechanism notes are kept in → see shared/references/01-strategy-picker.md §1 and shared/references/03-dim-and-rim.md §Appendix. Its support claim is **not** adopted: treat *both* historical claims as suspect, verify on a real device before shipping either direction, and never let `@supports` be your evidence. Where this skill states a direction, it is backed by the open WebKit bug, the June 2026 repro, and — for the showcase configuration — the 2026-11-08 physical-iPhone owner test (→ §1): the real device rendered the bend, which is exactly why real-device testing outranks emulation and why every direction here stays version- and renderer-scoped. → see shared/references/15-honesty-and-checklists.md §Conflicts kept visible.

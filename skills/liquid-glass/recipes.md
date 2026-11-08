@@ -34,7 +34,7 @@ Source assembly: `../../shared/references/02-css-scaffold.md` (classes, tokens, 
 
 - **Classes/tokens:** base `.lg`, gated `.lg--backdrop`; default `20px` radius.
 - **Light/dark:** base fill `.08` white / `.65` navy; border `.28` / `.08` white; ink `#221E4A` / `#F8FAFC`.
-- **Fallback:** common contract; Safari/Firefox keep readable frosted navigation when backdrop bend is unavailable.
+- **Fallback:** common contract; Safari/Firefox keep readable frosted navigation when the backdrop bend is unverified (frost is the floor; bend confirmed on owner-tested iPhone Safari).
 - **Pitfall — S15:** if the rim remains but bend disappears, check for a live `url()` and filter node before changing tokens.
 
 ## Toolbar

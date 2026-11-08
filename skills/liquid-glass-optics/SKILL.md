@@ -22,7 +22,7 @@ The neutral development notice is in `../../NOTICE`. Standalone means the showca
 | Production wash, rim weighting, theme tokens, geometry faults | `../../shared/references/03-dim-and-rim.md` |
 | Original WebGL2 API, explicit textures, hybrid swap and cleanup | `../../shared/references/07-webgl-shader.md` |
 | Standalone controls, exact original presets, exports and diagnostic API | `../../shared/references/14-showcase.md` |
-| Safari URL-filter wall, caches, compositing and OS-material conflict | `../../shared/references/06-safari-webkit.md` |
+| Safari scoped bend: measured position, caches, compositing and OS-material conflict | `../../shared/references/06-safari-webkit.md` |
 | Map budgets, idle/viewport gates, scroll synchronization | `../../shared/references/08-performance.md` |
 | Transform arming, filter-carrier motion and origin | `../../shared/references/09-motion.md` |
 

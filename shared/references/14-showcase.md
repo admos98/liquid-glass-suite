@@ -76,4 +76,4 @@ The standalone diagnostic API is `window.UltimateLiquidGlass`: `setRenderer`, `s
 
 ## Verification scope
 
-`tests/browser/showcase.spec.mjs` checks direct offline operation, exact original values and 2× maps, all surfaces/controls, plates, real renderers, split mode, state, movement, exports, and accessibility fallbacks. No external implementation or image is a comparison target. Actual results belong in `tests/evidence/verification.txt`; Chromium tests are not real-device Safari/iPhone or native-runtime evidence.
+`tests/browser/showcase.spec.mjs` checks direct offline operation, exact original values and 2× maps, all surfaces/controls, plates, real renderers, split mode, state, movement, exports, and accessibility fallbacks. No external implementation or image is a comparison target. Actual results belong in `tests/evidence/verification.txt`; Chromium tests are not by themselves real-device Safari/iPhone or native-runtime evidence. An owner-tested physical iPhone (mobile Safari) run of this showcase is recorded there: the bend renders and the showcase works perfectly (iOS/Safari versions not recorded).
