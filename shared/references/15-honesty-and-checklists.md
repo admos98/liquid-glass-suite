@@ -54,7 +54,7 @@ Summary:
 
 **System settings that change appearance.** People can pick a preferred Liquid Glass look in device settings, and can turn on Reduce Transparency / Increase Contrast. Appearance differs per variant. Test custom elements under all of these — system components adapt automatically, custom ones do not. → §Accessibility below.
 
-**Related.** Primary materials and adoption documentation is linked in `shared/references/16-sources.md`; `shared/references/13-native-apple.md` is the self-contained native route. External companion skills are optional, not installation dependencies.
+**Related.** Primary materials and adoption documentation is linked in `shared/references/16-sources.md`; `shared/references/13-native-apple.md` is the self-contained native route. The suite has no external skill dependencies: everything it references ships inside this package.
 
 ## §Accessibility
 
@@ -62,7 +62,7 @@ Not optional. People can pick a preferred Liquid Glass appearance in Settings, a
 
 ## §Native appendix (remainder of `13-native-apple.md`)
 
-**When to use / do not load.** Load for "add Liquid Glass to my view", `glassEffect` vs `UIGlassEffect`, "why doesn't my glass show up", `GlassEffectContainer spacing`, `.glass` button style, "should this bar be glass", "adopt Liquid Glass in my app". Do not load for browser/CSS implementation (`liquid-glass-web`), animation timing (`glass-overlay-motion`), or whether glass belongs on a surface at all (`apple-hig`). The corrected, self-contained native guide and primary sources are in `shared/references/13-native-apple.md`; retained contextual names require target-SDK availability checks.
+**When to use / do not load.** Load for "add Liquid Glass to my view", `glassEffect` vs `UIGlassEffect`, "why doesn't my glass show up", `GlassEffectContainer spacing`, `.glass` button style, "should this bar be glass", "adopt Liquid Glass in my app". This skill is **self-contained for native work**. Do not load it for browser/CSS implementation, animation timing, or whether glass belongs on a surface at all — those are separate concerns this suite does not ship. The guide and primary sources are in `shared/references/13-native-apple.md`; every signature requires a target-SDK availability check.
 
 **Glass variants.**
 
@@ -88,7 +88,7 @@ GlassEffectContainer(spacing: 20.0) {
 
 **Ordering.** `glassEffect` captures content to send to the container. Applying it before other appearance modifiers renders the wrong thing. Put it at the end of the modifier chain, always.
 
-**Platform-specific background effects (including visionOS; verify availability before using on iOS).** `.glassBackgroundEffect()` (automatic, container-relative rect), `.glassBackgroundEffect(in: someShape)`, `.glassBackgroundEffect(displayMode: .implicit)`. `GlassBackgroundDisplayMode`: `.always` (always show), `.implicit` (**show only when the view isn't already inside glass** — the correct default for nested surfaces), `.never`. `glassEffectID(_:in:)`, `glassEffectTransition(_:)` — `GlassEffectTransition.matchedGeometry` (default) or `.materialize`.
+**Platform-specific background effects — visionOS 1.0+, not iOS.** The verified signatures are `glassBackgroundEffect(displayMode:)` and `glassBackgroundEffect(in:displayMode:)`. There is **no** `glassBackgroundEffect(in:)` overload, and the default is `.always`, not `.implicit`. `GlassBackgroundDisplayMode`: `.always` (always show), `.implicit` (**show only when the view isn't already inside glass** — the correct value for nested surfaces), `.never`. Do not chain these onto a universal iOS modifier. `glassEffectID(_:in:)`, `glassEffectTransition(_:)` — `GlassEffectTransition.matchedGeometry` (default) or `.materialize`.
 
 **Scroll edge effect.** Content scrolling under a control can break legibility. System bars get this automatically; custom bars opt in with `.scrollEdgeEffectStyle(.automatic, for: .top)`. `backgroundExtensionEffect()` mirrors adjacent content to look like it stretches under a sidebar or inspector — the hero-image trick.
 
@@ -96,7 +96,7 @@ GlassEffectContainer(spacing: 20.0) {
 
 **UIKit.** `let effect = UIGlassEffect(style: .regular)` (or `.clear`); `effect.isInteractive = true`; `effect.tintColor = .systemOrange`; `let view = UIVisualEffectView(effect: effect)` (set `.contentView`). `UIGlassContainerEffect` renders multiple glass elements into one combined effect. `UIBackgroundExtensionView`, `UIScrollEdgeElementContainerInteraction` mirror the SwiftUI background/scroll-edge APIs.
 
-**AppKit.** `NSGlassEffectView` with `NSGlassEffectView.Style`, properties `tintColor`, `cornerRadius`, `contentView`, `automaticallyPlacesContentView`. `NSGlassEffectContainerView` merges descendants within a proximity.
+**AppKit.** `NSGlassEffectView` with `NSGlassEffectView.Style`, and properties `tintColor`, `cornerRadius`, `contentView`, `effectIsInteractive`. (`automaticallyPlacesContentView` does not exist on this class.) `NSGlassEffectContainerView` exposes `contentView` and `spacing`, and merges descendants within a proximity.
 
 **Corner concentration.** Apple's shapes are concentric with their containers — hardware curvature drives the radius. `ConcentricRectangle` and `Shape/rect(corners:isUniform:)` in SwiftUI; `UICornerConfiguration` (`capsule(maximumRadius:)`, `corners(radius:)`, `uniformCorners(radius:)`, and the per-edge family) in UIKit.
 
@@ -116,7 +116,7 @@ GlassEffectContainer(spacing: 20.0) {
 | Shapes merge when static | Merge threshold greater than the actual inter-shape gap (when merging is unintended). |
 | Effect renders the wrong content | `glassEffect` applied before other appearance modifiers. |
 | Doesn't adopt after SDK upgrade | Hard-coded layout metrics or a custom background in the bar/sheet. |
-| Nested surfaces look doubled | `glassBackgroundEffect(displayMode:)` defaults wrong — use `.implicit`. |
+| Nested surfaces look doubled | Shared `glassBackgroundEffect(displayMode:)` (visionOS) left at its `.always` default where `.implicit` was intended. |
 
 **Sourcing every number.** Apple publishes **no numeric blur cap, layer count, or displacement budget**. Use the primary DocC-checked declarations in `shared/references/13-native-apple.md`; verify other names and platform availability before quoting; every pixel/point figure is a heuristic and is tagged per §Source tags. One signature to distrust: `glassEffect(_:in:isEnabled:)` — see shared/references/13-native-apple.md §2.
 

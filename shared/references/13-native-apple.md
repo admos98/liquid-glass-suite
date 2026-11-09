@@ -65,7 +65,9 @@ if #available(iOS 26.0, *) {
 
 ## AppKit and platform-specific APIs
 
-AppKit offers `NSGlassEffectView` and `NSGlassEffectContainerView`; validate styles and properties in current Apple documentation before using them. Scroll/background APIs are platform-specific: do not mix visionOS `glassBackgroundEffect` guidance into a universal iOS modifier chain.
+AppKit offers `NSGlassEffectView` (members: `style`, `tintColor`, `cornerRadius`, `contentView`, `effectIsInteractive`) and `NSGlassEffectContainerView` (`contentView`, `spacing`). There is no `automaticallyPlacesContentView` property on `NSGlassEffectView` — do not invent it, and do not confuse it with `UIVisualEffectView.automaticallyPlacesContentView`, which does not exist either. Verify against the deployed SDK.
+
+Scroll/background APIs are platform-specific: `glassBackgroundEffect(_:displayMode:)` and its `in:` overload are **visionOS 1.0+** APIs, not iOS. Never mix this visionOS guidance into a universal iOS modifier chain.
 
 Compatibility keys such as `UIDesignRequiresCompatibility` are temporary SDK-era escape hatches, not a durable migration plan. Verify their support in the SDK being shipped.
 

@@ -1,7 +1,7 @@
 {
   "name": "liquid-glass-suite",
   "displayName": "Liquid Glass Suite",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Drop-in Liquid Glass CSS recipes with separate optics, debugging and native Apple skills over a shared core.",
   "author": {
     "name": "Moslem Adib",

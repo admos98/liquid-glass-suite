@@ -1,6 +1,6 @@
 {
   "name": "liquid-glass-suite",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "description": "Four task-focused Liquid Glass skills over a shared CSS/SVG/WebGL2 core, with recipes, measurement tools and executable verification.",
   "license": "MIT",

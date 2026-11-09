@@ -10,7 +10,7 @@
       "name": "liquid-glass-suite",
       "source": "./",
       "description": "Drop-in Liquid Glass CSS recipes with separate optics, debugging and native Apple skills over a shared core.",
-      "version": "2.0.0"
+      "version": "2.0.1"
     }
   ]
 }

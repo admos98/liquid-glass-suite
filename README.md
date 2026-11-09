@@ -28,7 +28,7 @@ Register the plugin marketplace and install the plugin:
 /plugin install liquid-glass-suite@admos98-skills
 ```
 
-The marketplace entry points at the repository root (`source: "./"`), and Claude Code auto-discovers all four folders under `skills/`. The full flow was owner-tested end-to-end with Claude Code 2.1.319: marketplace clone, install, skill discovery, strict manifest validation, all 17 package tests and the showcase build check pass. The only advisory was a missing listing icon, which does not block installation. See [`tests/evidence/verification.txt`](tests/evidence/verification.txt) for the test record, including the platform note.
+The marketplace entry points at the repository root (`source: "./"`), and Claude Code auto-discovers all four folders under `skills/`. The full flow was owner-tested end-to-end with Claude Code 2.1.319: marketplace clone, install, four-skill discovery, strict manifest validation, all 17 package tests and the showcase build check pass. The listing icon is included, so strict validation reports no findings. See [`tests/evidence/verification.txt`](tests/evidence/verification.txt) for the test record, including the platform note.
 
 **Manual install:** copy the entire `liquid-glass-suite` folder into the agent's skills area, then expose each `skills/<name>` folder in its skill scan path using the agent's supported folder-link mechanism. Each folder name matches its frontmatter `name`. Keep the suite intact because its `../../shared/...` references must resolve. For a local Claude Code run without marketplace installation, `claude --plugin-dir /path/to/liquid-glass-suite` loads the same unit.
 
