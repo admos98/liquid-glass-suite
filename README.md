@@ -6,7 +6,7 @@
 
 **Liquid Glass is refraction, not blur.** One suite with CSS/SVG and WebGL2 paths plus tools to measure the bend.
 
-**Liquid Glass Suite** is a Claude Code plugin and open Agent Skills collection for **Apple Liquid Glass on the web**. Four `SKILL.md` skills teach an AI coding agent HTML/CSS, SVG displacement maps, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement, debugging and verification.
+**Liquid Glass Suite** is a Claude Code plugin and open Agent Skills collection for **Apple Liquid Glass on the web**: a Liquid Glass skill for HTML/CSS, SVG displacement maps, WebGL2 refraction, React, Tailwind v4 and Safari/WebKit fallbacks, plus optics, debugging and native Apple skills with measurement and verification.
 
 **[Open the live showcase →](https://admos98.github.io/liquid-glass-suite/showcase.html)** — the standalone reference running on GitHub Pages ([overview page](https://admos98.github.io/liquid-glass-suite/)). It also works offline from [`shared/assets/showcase.html`](shared/assets/showcase.html) with no server, build, or network. Choosing between skills? See [routing and related work](docs/COMPARISON.md).
 
@@ -85,7 +85,7 @@ npx skills add admos98/liquid-glass-suite
 
 **One skill or four?** Four task-focused skills share `shared/`. Install the whole plugin — copying one `skills/<name>` folder alone breaks its `../../shared/...` references.
 
-**Which agents are supported?** Claude Code via the plugin marketplace, and generic Agent Skills CLIs via `npx skills add`. The four skills use portable `name` + `description` frontmatter.
+**Which agents are supported?** Claude Code via the plugin marketplace and generic Agent Skills CLIs via `npx skills add`. This Liquid Glass skill set uses portable `name` + `description` frontmatter.
 
 ## Scope and license
 
