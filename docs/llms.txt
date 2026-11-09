@@ -20,7 +20,7 @@ npx skills add admos98/liquid-glass-suite
 
 ## Facts
 
-- Version: 2.0.1.
+- Version: 2.0.2.
 - Skills: `liquid-glass` (apply), `liquid-glass-optics`, `liquid-glass-debug`, `liquid-glass-native`.
 - Web paths: universal `blur() saturate()` fallback; conservatively gated Chromium
   SVG backdrop lens; explicit-texture WebGL2 that cannot read arbitrary DOM.
@@ -49,3 +49,10 @@ npx skills add admos98/liquid-glass-suite
 - [Native Apple guide](https://github.com/admos98/liquid-glass-suite/blob/main/shared/references/13-native-apple.md)
 - [Verification evidence](https://github.com/admos98/liquid-glass-suite/blob/main/tests/evidence/verification.txt)
 - [Development notice](https://github.com/admos98/liquid-glass-suite/blob/main/NOTICE)
+
+## Pages
+
+- [Overview and install](https://admos98.github.io/liquid-glass-suite/)
+- [Interactive showcase](https://admos98.github.io/liquid-glass-suite/showcase.html)
+- [Routing and related work](https://admos98.github.io/liquid-glass-suite/COMPARISON.md)
+- [Sitemap](https://admos98.github.io/liquid-glass-suite/sitemap.xml)

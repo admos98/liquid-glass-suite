@@ -1,7 +1,7 @@
 {
   "name": "liquid-glass-suite",
   "displayName": "Liquid Glass Suite",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Apple Liquid Glass agent skills for web pages: CSS, SVG displacement, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement and debugging.",
   "author": {
     "name": "Moslem Adib",

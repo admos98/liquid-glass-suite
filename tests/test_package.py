@@ -49,7 +49,7 @@ class PackageContract(unittest.TestCase):
         plugin = json.loads((ROOT / '.claude-plugin/plugin.json').read_text())
         marketplace = json.loads((ROOT / '.claude-plugin/marketplace.json').read_text())
         self.assertEqual(plugin['name'], 'liquid-glass-suite')
-        self.assertEqual(plugin['version'], '2.0.1')
+        self.assertEqual(plugin['version'], '2.0.2')
         self.assertNotIn('skills', plugin, 'Standard skills/ discovery must not be replaced by a root skill path')
         self.assertEqual(marketplace['name'], 'admos98-skills')
         self.assertIn('name', marketplace['owner'])
