@@ -62,13 +62,18 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp shared/assets/showcase.html _site/index.html
+          # Root is the keyword-rich landing page; the showcase keeps a stable
+          # direct path. Both are generated from tracked sources, so only these
+          # files are ever served — no repo config or test files.
+          cp docs/index.html _site/index.html
           cp shared/assets/showcase.html _site/showcase.html
+          cp docs/llms.txt _site/llms.txt
+          cp docs/COMPARISON.md _site/COMPARISON.md
           touch _site/.nojekyll
           echo 'Staged files:'
           ls -la _site
           echo 'SHA-256:'
-          sha256sum _site/index.html _site/showcase.html
+          sha256sum _site/index.html _site/showcase.html _site/llms.txt _site/COMPARISON.md
 
       - uses: actions/upload-pages-artifact@v5.0.0
         with:

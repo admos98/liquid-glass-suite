@@ -9,7 +9,7 @@
     {
       "name": "liquid-glass-suite",
       "source": "./",
-      "description": "Drop-in Liquid Glass CSS recipes with separate optics, debugging and native Apple skills over a shared core.",
+      "description": "Apple Liquid Glass agent skills for web pages: CSS, SVG displacement, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement and debugging.",
       "version": "2.0.1"
     }
   ]

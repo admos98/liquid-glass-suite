@@ -1,0 +1,7 @@
+interface:
+  display_name: "Liquid Glass — web apply"
+  short_description: "Apple Liquid Glass web recipes for HTML/CSS, React and Tailwind v4."
+  default_prompt: "Build a floating Liquid Glass navigation bar for this web page."
+
+policy:
+  allow_implicit_invocation: true

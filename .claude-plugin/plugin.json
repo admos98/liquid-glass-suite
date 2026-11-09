@@ -2,20 +2,32 @@
   "name": "liquid-glass-suite",
   "displayName": "Liquid Glass Suite",
   "version": "2.0.1",
-  "description": "Drop-in Liquid Glass CSS recipes with separate optics, debugging and native Apple skills over a shared core.",
+  "description": "Apple Liquid Glass agent skills for web pages: CSS, SVG displacement, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement and debugging.",
   "author": {
     "name": "Moslem Adib",
     "url": "https://github.com/admos98"
   },
-  "homepage": "https://github.com/admos98/liquid-glass-suite",
+  "homepage": "https://admos98.github.io/liquid-glass-suite/",
   "repository": "https://github.com/admos98/liquid-glass-suite",
   "license": "MIT",
   "keywords": [
     "liquid-glass",
+    "apple-liquid-glass",
+    "apple-hig",
+    "agent-skills",
+    "claude-code",
+    "claude-plugin",
     "glassmorphism",
-    "refraction",
-    "svg",
+    "css",
+    "svg-filters",
     "webgl2",
-    "accessibility"
+    "refraction",
+    "react",
+    "tailwindcss",
+    "safari",
+    "webkit",
+    "accessibility",
+    "frontend",
+    "design-system"
   ]
 }

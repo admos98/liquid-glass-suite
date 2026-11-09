@@ -6,7 +6,9 @@
 
 **Liquid Glass is refraction, not blur.** One suite with CSS/SVG and WebGL2 paths plus tools to measure the bend.
 
-**[Open the live showcase →](https://admos98.github.io/liquid-glass-suite/)** — the standalone reference running on GitHub Pages. It also works offline from [`shared/assets/showcase.html`](shared/assets/showcase.html) with no server, build, or network.
+**Liquid Glass Suite** is a Claude Code plugin and open Agent Skills collection for **Apple Liquid Glass on the web**. Four `SKILL.md` skills teach an AI coding agent HTML/CSS, SVG displacement maps, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement, debugging and verification.
+
+**[Open the live showcase →](https://admos98.github.io/liquid-glass-suite/showcase.html)** — the standalone reference running on GitHub Pages ([overview page](https://admos98.github.io/liquid-glass-suite/)). It also works offline from [`shared/assets/showcase.html`](shared/assets/showcase.html) with no server, build, or network. Choosing between skills? See [routing and related work](docs/COMPARISON.md).
 
 > This skill suite was developed from publicly available information on the web and practical research with browser rendering engines. See [`NOTICE`](NOTICE). The showcase is self-contained and works offline.
 
@@ -68,6 +70,22 @@ npm test
 ```
 
 The dev-only Chromium package supplies the Linux test runtime; on another platform use `PLAYWRIGHT_SYSTEM_CHROMIUM=1` after `npx playwright install chromium`. The marketplace install and strict manifest validation were owner-tested with Claude Code 2.1.319 — see [`tests/evidence/verification.txt`](tests/evidence/verification.txt) for actual runs. [`evals/`](evals/) contains ten agent benchmarks with empty results tables.
+
+## Install with other agents
+
+Generic Agent Skills CLIs read the same four `SKILL.md` files:
+
+```sh
+npx skills add admos98/liquid-glass-suite
+```
+
+## FAQ
+
+**Is the project named "Liquid Glass Suit"?** The name is **Liquid Glass Suite**; both spellings point at `admos98/liquid-glass-suite`.
+
+**One skill or four?** Four task-focused skills share `shared/`. Install the whole plugin — copying one `skills/<name>` folder alone breaks its `../../shared/...` references.
+
+**Which agents are supported?** Claude Code via the plugin marketplace, and generic Agent Skills CLIs via `npx skills add`. The four skills use portable `name` + `description` frontmatter.
 
 ## Scope and license
 

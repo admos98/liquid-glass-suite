@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liquid Glass Suite — Apple Liquid Glass agent skills for web pages</title>
+<meta name="description" content="Apple Liquid Glass agent skills for web pages: HTML/CSS, SVG displacement maps, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement and debugging. Four SKILL.md skills, MIT, a Claude Code plugin and an Agent Skills collection.">
+<link rel="canonical" href="https://admos98.github.io/liquid-glass-suite/">
+<style>
+  :root{--bg:#fafafa;--card:#fff;--ink:#171717;--mut:#6b6b6b;--line:#e5e5e5;--accent:#0369a1}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:56px 20px 80px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 14px;letter-spacing:-.02em}
+  h2{font-size:17px;margin:38px 0 10px;letter-spacing:-.01em}
+  p{margin:0 0 14px}
+  .lede{font-size:18px;color:var(--mut);max-width:64ch}
+  .cta{display:inline-block;margin:6px 0 4px;padding:12px 20px;border-radius:12px;background:var(--accent);
+    color:#fff;text-decoration:none;font-weight:600}
+  .cta:hover{background:#075985}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px}
+  pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto}
+  ul{padding-left:22px;margin:0 0 14px}
+  li{margin:4px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:13.5px}
+  a{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Liquid Glass Suite — Apple Liquid Glass agent skills for web pages</h1>
+  <p class="lede">Four <code>SKILL.md</code> skills that teach an AI coding agent how to build
+  Apple Liquid Glass on the web: HTML/CSS, SVG displacement maps, WebGL2 refraction, React,
+  Tailwind v4, Safari/WebKit fallbacks, optical measurement, debugging and verification.</p>
+
+  <p><a class="cta" href="showcase.html">Open the interactive showcase →</a></p>
+  <p style="color:var(--mut);font-size:14.5px">Or read the
+    <a href="https://github.com/admos98/liquid-glass-suite">repository</a> and the
+    <a href="https://github.com/admos98/liquid-glass-suite/blob/main/README.md">README</a>.</p>
+
+  <div class="card">
+    <h2 style="margin-top:0">Install</h2>
+    <pre># Claude Code
+/plugin marketplace add admos98/liquid-glass-suite
+/plugin install liquid-glass-suite@admos98-skills
+
+# Generic Agent Skills CLI
+npx skills add admos98/liquid-glass-suite</pre>
+    <p style="margin-bottom:0">Keep the suite intact. Each <code>skills/&lt;name&gt;</code> folder
+    references <code>../../shared/…</code>, so copying one folder alone breaks it.</p>
+  </div>
+
+  <h2>What is in the suite</h2>
+  <table>
+    <tr><th>Skill</th><th>Job</th></tr>
+    <tr><td><code>liquid-glass</code></td><td>Apply — drop-in CSS/JS recipes for nav, tabs, cards, sheets, menus, buttons, search, sidebar, sliders</td></tr>
+    <tr><td><code>liquid-glass-optics</code></td><td>CSS/SVG displacement, reflective rim, WebGL2, the standalone showcase</td></tr>
+    <tr><td><code>liquid-glass-debug</code></td><td>S01–S33 symptom triage, Chromium/WebKit quirks, pixel measurement</td></tr>
+    <tr><td><code>liquid-glass-native</code></td><td>SwiftUI/UIKit/AppKit, DocC-checked declarations, availability fallbacks</td></tr>
+  </table>
+
+  <h2>Liquid Glass is refraction, not blur</h2>
+  <p>The backdrop <em>bends</em> near the boundary while the centre stays readable.
+  <code>backdrop-filter: blur()</code> alone is frosted glass — a different material, and what most
+  “liquid glass” snippets actually ship. The suite ships a universal <code>blur() saturate()</code>
+  fallback, a conservatively gated Chromium SVG-backdrop lens, and an explicit-texture WebGL2 path
+  that cannot read arbitrary DOM.</p>
+
+  <h2>Verification, and its limits</h2>
+  <ul>
+    <li>17 package tests, 11 Playwright browser tests, offline showcase build check, strict plugin manifest validation.</li>
+    <li>Every Apple signature quoted in the native skill was checked against Apple’s own DocC JSON.</li>
+    <li>Native Apple samples were <strong>not</strong> compiled — no Apple hardware was used, and no native-runtime pass is claimed.</li>
+    <li>Playwright Chromium is not a real iPhone. One physical-device run is recorded, with iOS/Safari versions unrecorded.</li>
+    <li>Apple publishes no numeric Liquid Glass specification. Every number in the suite is tagged
+      <code>apple-hig</code>, <code>community</code>, <code>figma</code> or <code>measured</code>.</li>
+  </ul>
+  <p><a href="https://github.com/admos98/liquid-glass-suite/blob/main/tests/evidence/verification.txt">Read the full verification transcript →</a></p>
+
+  <h2>Common questions</h2>
+  <p><strong>Is it “Liquid Glass Suit”?</strong> The name is <strong>Liquid Glass Suite</strong>;
+  both spellings point at <code>admos98/liquid-glass-suite</code>.</p>
+  <p><strong>One skill or four?</strong> Four skills over one shared core. Install the whole plugin.</p>
+  <p><strong>Which agents?</strong> Claude Code via the plugin marketplace, and generic Agent Skills
+  CLIs via <code>npx skills add</code>. The four skills use portable <code>name</code> +
+  <code>description</code> frontmatter.</p>
+
+  <footer>
+    MIT licensed. Developed from publicly available web information and browser-rendering research.
+    Apple, the Human Interface Guidelines, SF Symbols, SwiftUI and Liquid Glass are trademarks of
+    Apple Inc. This project is not affiliated with or endorsed by Apple.
+  </footer>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "Liquid Glass Suite",
+      "alternateName": "Liquid Glass Suit",
+      "description": "Apple Liquid Glass agent skills for web pages: HTML/CSS, SVG displacement maps, WebGL2 refraction, React, Tailwind v4, Safari/WebKit fallbacks, optical measurement and debugging.",
+      "codeRepository": "https://github.com/admos98/liquid-glass-suite",
+      "url": "https://admos98.github.io/liquid-glass-suite/",
+      "license": "https://opensource.org/licenses/MIT",
+      "version": "2.0.1",
+      "programmingLanguage": ["CSS", "JavaScript", "HTML", "Swift"],
+      "keywords": "liquid glass, apple liquid glass, agent skills, claude code plugin, svg displacement, webgl2, refraction, glassmorphism, tailwind v4, safari webkit fallback",
+      "author": { "@type": "Person", "name": "Moslem Adib", "url": "https://github.com/admos98" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which Liquid Glass skill is for HTML, CSS and React on the web?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Liquid Glass Suite ships four SKILL.md skills for Apple Liquid Glass on the web: liquid-glass for drop-in HTML/CSS and React/Tailwind v4 recipes, liquid-glass-optics for SVG displacement and WebGL2 refraction, liquid-glass-debug for symptom-led triage, and liquid-glass-native for SwiftUI, UIKit and AppKit." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the project called Liquid Glass Suit or Liquid Glass Suite?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The project name is Liquid Glass Suite; \"Suit\" is a common misspelling. Both refer to the repository admos98/liquid-glass-suite." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install the Liquid Glass Suite skills?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For Claude Code, run /plugin marketplace add admos98/liquid-glass-suite then /plugin install liquid-glass-suite@admos98-skills. For a generic Agent Skills CLI, run npx skills add admos98/liquid-glass-suite. Install the whole suite because the skills reference shared assets." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the suite support Safari and WebKit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The suite documents the WebKit wall around backdrop-filter url() and ships a conservative engine gate plus a frosted fallback, with an explicit-texture WebGL2 path for true backdrop refraction. Playwright WebKit is not a real iPhone, and the suite states that limit plainly." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

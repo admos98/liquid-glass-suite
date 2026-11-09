@@ -1,0 +1,7 @@
+interface:
+  display_name: "Liquid Glass — optics"
+  short_description: "SVG displacement maps, reflective rims and WebGL2 refraction."
+  default_prompt: "The glass is only blur — give me a real refracted rim with an SVG displacement map."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Liquid Glass — debug"
+  short_description: "Symptom-led triage for missing bends, painted rims and WebKit failures."
+  default_prompt: "The glass works in Chrome but shows no bend on iPhone — diagnose it."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Liquid Glass — native Apple"
+  short_description: "SwiftUI, UIKit and AppKit Liquid Glass with availability fallbacks."
+  default_prompt: "Add Liquid Glass to my SwiftUI custom button, with a fallback for older OS versions."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,51 @@
+# Liquid Glass Suite
+
+> Apple Liquid Glass agent skills for web pages. Four `SKILL.md` skills covering
+> CSS/SVG displacement, WebGL2 refraction, React, Tailwind v4, Safari/WebKit
+> fallbacks, optical measurement, debugging and executable verification.
+> MIT licensed. Not affiliated with or endorsed by Apple.
+
+Install:
+
+```text
+/plugin marketplace add admos98/liquid-glass-suite
+/plugin install liquid-glass-suite@admos98-skills
+```
+
+Generic Agent Skills CLI:
+
+```sh
+npx skills add admos98/liquid-glass-suite
+```
+
+## Facts
+
+- Version: 2.0.1.
+- Skills: `liquid-glass` (apply), `liquid-glass-optics`, `liquid-glass-debug`, `liquid-glass-native`.
+- Web paths: universal `blur() saturate()` fallback; conservatively gated Chromium
+  SVG backdrop lens; explicit-texture WebGL2 that cannot read arbitrary DOM.
+- Liquid Glass is refraction, not blur: the backdrop bends near the boundary while
+  the centre stays readable.
+- Verification: 17 package tests, 11 Playwright browser tests, offline showcase
+  build check, strict plugin manifest validation.
+- Live showcase: https://admos98.github.io/liquid-glass-suite/
+
+## Known limits
+
+- No Vue, Svelte, Astro, Solid or SSR adapters are shipped.
+- The eval results table is intentionally empty; no model-driven runs are claimed.
+- Native Apple samples were not compiled on Apple hardware.
+- No external Apple pixel baseline is bundled; Apple publishes no numeric Liquid
+  Glass specification.
+- Playwright Chromium is not a real iPhone. One owner-tested physical-device run
+  is recorded, with iOS/Safari versions unrecorded.
+
+## Key files
+
+- [README](https://github.com/admos98/liquid-glass-suite/blob/main/README.md)
+- [Skills](https://github.com/admos98/liquid-glass-suite/tree/main/skills)
+- [Shared references](https://github.com/admos98/liquid-glass-suite/tree/main/shared/references)
+- [Failure catalogue](https://github.com/admos98/liquid-glass-suite/blob/main/shared/references/11-failure-catalogue.md)
+- [Native Apple guide](https://github.com/admos98/liquid-glass-suite/blob/main/shared/references/13-native-apple.md)
+- [Verification evidence](https://github.com/admos98/liquid-glass-suite/blob/main/tests/evidence/verification.txt)
+- [Development notice](https://github.com/admos98/liquid-glass-suite/blob/main/NOTICE)
