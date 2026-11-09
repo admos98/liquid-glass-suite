@@ -68,8 +68,6 @@ jobs:
           echo 'SHA-256:'
           sha256sum _site/index.html _site/showcase.html
 
-      - uses: actions/configure-pages@v6.0.0
-
       - uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: _site
@@ -80,12 +78,20 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # enablement: true bootstraps the Pages site on first run, so no manual
+      # Settings -> Pages step is required. Needs pages: write, which only this
+      # job holds.
+      - uses: actions/configure-pages@v6.0.0
+        with:
+          enablement: true
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5.0.1
