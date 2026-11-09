@@ -112,3 +112,23 @@ Node: v24.11.1. Result: 17/17 package tests OK + 11/11 browser tests passed (15.
 - `claude plugin validate . --strict --json`: success true, manifest errors [], warnings [], directory findings [].
 - Claude Code 2.1.319 install re-run on 2.0.1: marketplace added, plugin installed at user scope, inventory reports version 2.0.1 and all four skills (liquid-glass, liquid-glass-debug, liquid-glass-native, liquid-glass-optics); ~301 tokens always-on.
 - Not run: native Apple runtime samples (no Apple hardware); real-device Safari beyond the 2026-11-08 owner test; model-driven skill-selection runs (evals/ results table intentionally empty).
+
+GitHub Pages deploy (added 2026-11-09)
+- Workflow: `.github/workflows/pages.yml`. Two jobs. `verify` runs on push to main
+  and on pull requests touching the runtime; `deploy` needs `verify` and is
+  restricted to main, so the published artifact is byte-for-byte the showcase the
+  browser suite just exercised.
+- Gates inside `verify`: `npm ci`; `npm run check:showcase`; the package contracts
+  via `python -m unittest discover -s tests -v` in a throwaway venv with Pillow
+  (the runner's Python is externally managed); `npm test` (Playwright, Chromium
+  from the lockfile's @sparticuz/chromium on Linux).
+- Artifact: `_site/` holds `index.html` (the showcase), `showcase.html` (a stable
+  direct path), and `.nojekyll` so Jekyll does not transform anything. Only those
+  two generated files are published — no repository config or test files are
+  served. Action installs, the staged file list, and summed SHA-256 are printed
+  in the run log for verification.
+- Version pins: actions/checkout v7.0.1, actions/setup-node v7.1.0,
+  actions/configure-pages v6.0.0, actions/upload-pages-artifact v5.0.0,
+  actions/deploy-pages v5.0.1. Pinned to exact releases, not floating major tags.
+- Published URL: https://admos98.github.io/liquid-glass-suite/ with the direct
+  path https://admos98.github.io/liquid-glass-suite/showcase.html.

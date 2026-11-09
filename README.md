@@ -1,10 +1,12 @@
 # liquid-glass-suite
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Offline showcase](https://img.shields.io/badge/Showcase-Offline-success.svg)](shared/assets/showcase.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Showcase: live](https://img.shields.io/badge/Showcase-live-0369a1.svg)](https://admos98.github.io/liquid-glass-suite/) [![Pages deploy](https://github.com/admos98/liquid-glass-suite/actions/workflows/pages.yml/badge.svg)](https://github.com/admos98/liquid-glass-suite/actions/workflows/pages.yml)
 
 ![Liquid Glass refraction over a striped plate](docs/hero.png)
 
 **Liquid Glass is refraction, not blur.** One suite with CSS/SVG and WebGL2 paths plus tools to measure the bend.
+
+**[Open the live showcase →](https://admos98.github.io/liquid-glass-suite/)** — the standalone reference running on GitHub Pages. It also works offline from [`shared/assets/showcase.html`](shared/assets/showcase.html) with no server, build, or network.
 
 > This skill suite was developed from publicly available information on the web and practical research with browser rendering engines. See [`NOTICE`](NOTICE). The showcase is self-contained and works offline.
 

@@ -1,0 +1,91 @@
+name: Deploy showcase to Pages
+
+# Publishes the standalone showcase as a static site. The deploy job cannot run
+# until every gate has passed on the same commit, so the published artifact is
+# byte-for-byte the showcase the browser suite just exercised.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'shared/assets/**'
+      - 'tests/browser/**'
+      - 'scripts/build-showcase.mjs'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify the artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Standalone showcase matches its editable source
+        run: npm run check:showcase
+
+      - name: Package and fixture contracts
+        # Pillow is needed by edge-profile.py; the runner's Python is externally
+        # managed, so the contracts run in a throwaway venv.
+        run: |
+          set -euo pipefail
+          python3 -m venv .venv-ci
+          .venv-ci/bin/python -m pip install --upgrade pip
+          .venv-ci/bin/python -m pip install Pillow
+          .venv-ci/bin/python -m unittest discover -s tests -v
+
+      - name: Browser suite
+        # Playwright's Chromium comes from the lockfile's @sparticuz/chromium on
+        # Linux, and tests/browser is exactly what this deploy publishes.
+        run: npm test
+
+      - name: Stage the deployable artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp shared/assets/showcase.html _site/index.html
+          cp shared/assets/showcase.html _site/showcase.html
+          touch _site/.nojekyll
+          echo 'Staged files:'
+          ls -la _site
+          echo 'SHA-256:'
+          sha256sum _site/index.html _site/showcase.html
+
+      - uses: actions/configure-pages@v6.0.0
+
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to Pages
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
