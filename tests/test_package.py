@@ -8,6 +8,26 @@ import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+# Directory names that are never package content. Any virtual environment or
+# generated tree created inside the checkout is skipped by the sweep tests
+# below, whatever it is called ('.venv', '.venv-ci', 'venv', 'env', ...).
+IGNORED_DIRS = {'node_modules', '.git', 'test-results', 'playwright-report',
+                '__pycache__', '.pytest_cache'}
+
+
+def is_ignored(relative_path):
+    parts = relative_path.parts
+    if any(part in IGNORED_DIRS for part in parts):
+        return True
+    # Virtual environments: any path segment starting with '.' or matching a
+    # conventional env name, plus any segment that contains a `pyvenv.cfg`
+    # marker (the reliable signal that a tree is a venv, not source).
+    for part in parts[:-1]:
+        if part.startswith('.') or part in {'venv', 'env', 'virtualenv'}:
+            return True
+    return False
+
+
 SKILLS = {
     'liquid-glass': 4096,
     'liquid-glass-optics': 6144,
@@ -57,7 +77,7 @@ class PackageContract(unittest.TestCase):
         issues = []
         pattern = re.compile(r'(?:shared/(?:references|assets|scripts)|scripts|tests)/[A-Za-z0-9_./-]+\.[A-Za-z0-9]+')
         for file in ROOT.rglob('*'):
-            if any(part in {'node_modules', '.git', '.venv', 'test-results', 'playwright-report', '__pycache__'} for part in file.relative_to(ROOT).parts):
+            if is_ignored(file.relative_to(ROOT)):
                 continue
             if file.name == Path(__file__).name:
                 continue
@@ -101,7 +121,7 @@ class PackageContract(unittest.TestCase):
         for file in ROOT.rglob('*'):
             if not file.is_file() or file == Path(__file__):
                 continue
-            if any(part in {'.git', 'node_modules', '.venv', 'test-results', 'playwright-report'} for part in file.relative_to(ROOT).parts):
+            if is_ignored(file.relative_to(ROOT)):
                 continue
             if file.suffix not in ('.md', '.js', '.css', '.html', '.py', '.json', '.txt'):
                 continue

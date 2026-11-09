@@ -43,13 +43,15 @@ jobs:
 
       - name: Package and fixture contracts
         # Pillow is needed by edge-profile.py; the runner's Python is externally
-        # managed, so the contracts run in a throwaway venv.
+        # managed, so the contracts run in a throwaway venv. The venv is created
+        # OUTSIDE the checkout: nothing generated inside the tree can ever be
+        # mistaken for package content by the sweep tests.
         run: |
           set -euo pipefail
-          python3 -m venv .venv-ci
-          .venv-ci/bin/python -m pip install --upgrade pip
-          .venv-ci/bin/python -m pip install Pillow
-          .venv-ci/bin/python -m unittest discover -s tests -v
+          python3 -m venv "${RUNNER_TEMP}/venv-ci"
+          "${RUNNER_TEMP}/venv-ci/bin/python" -m pip install --upgrade pip
+          "${RUNNER_TEMP}/venv-ci/bin/python" -m pip install Pillow
+          "${RUNNER_TEMP}/venv-ci/bin/python" -m unittest discover -s tests -v
 
       - name: Browser suite
         # Playwright's Chromium comes from the lockfile's @sparticuz/chromium on

@@ -2,6 +2,9 @@ node_modules/
 __pycache__/
 *.py[cod]
 .venv/
+.venv-*/
+venv/
+env/
 .env
 .env.*
 test-results/
