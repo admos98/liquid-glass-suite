@@ -157,3 +157,37 @@ GitHub Pages deploy — live result (2026-11-09)
   contracts because the CI venv (.venv-ci) sat inside the checkout and the sweep
   tests scanned pip's vendored sources; run #3's first attempt failed at
   configure-pages for the reason above. Both are fixed.
+
+Discoverability pass (2026-11-09)
+- Licence detection fixed: the LICENSE file had a trademark paragraph appended
+  after the MIT body, so GET /repos/... reported license.spdx_id NOASSERTION. The
+  paragraph moved to NOTICE. Read-back now reports MIT.
+- Metadata and landing files added: AGENTS.md, docs/llms.txt, docs/index.html
+  (dependency-free, JSON-LD SoftwareSourceCode + FAQPage), docs/COMPARISON.md,
+  skills/*/agents/openai.yaml, plus a richer plugin.json/marketplace.json
+  description and 18 keywords.
+- GitHub repository-search positions, measured before (2026-11-09, earlier in the
+  day) and after (commit 14aaffa). Positions are 1-based within the first 100
+  results; GitHub search is weighted by stars and engagement, so position moves
+  from metadata alone are small.
+
+  | Query | Before | After |
+  |---|---|---|
+  | `liquid-glass-suite in:name` | 1 / 1 | 1 / 1 |
+  | `"liquid glass skill" in:name,description,readme` | not in top 100 / 105 | 60 / 106 |
+  | `apple liquid glass web CSS SVG WebGL2 in:name,description,readme` | 18 / 98 | 16 / 98 |
+  | `topic:agent-skills liquid-glass` | 19 / 53 | 19 / 53 |
+  | `"liquid glass" agent skill in:name,description,readme` | not in top 100 / 3238 | not in top 100 / 3239 |
+
+- The exact-phrase probe was unreachable before: GitHub matches it as a contiguous
+  string, and neither the About field nor the README contained "liquid glass
+  skill". Reworking two README sentences to contain the phrase naturally took it
+  from absent to position 60. This is the measured reason the phrase queries now
+  match at all.
+- Not claimed: rank improvements for the broad queries cannot be attributed to
+  metadata, because GitHub weights stars, watchers and recency far above field
+  matches. Directory submissions, real installs and published eval results are the
+  levers that move those, and none are done yet.
+- Pages deploy (run #6 on 14aaffa): success. The site root is now the landing page,
+  with showcase.html kept at a stable path and llms.txt plus COMPARISON.md served
+  alongside.
