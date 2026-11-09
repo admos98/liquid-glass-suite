@@ -132,3 +132,28 @@ GitHub Pages deploy (added 2026-11-09)
   actions/deploy-pages v5.0.1. Pinned to exact releases, not floating major tags.
 - Published URL: https://admos98.github.io/liquid-glass-suite/ with the direct
   path https://admos98.github.io/liquid-glass-suite/showcase.html.
+
+GitHub Pages deploy — live result (2026-11-09)
+- Site enabled with an owner token: POST /repos/admos98/liquid-glass-suite/pages
+  -> 201, build_type=workflow, public=true, https_enforced=true.
+  `actions/configure-pages` with `enablement: true` CANNOT create the site: the
+  workflow token is refused with "HttpError: Resource not accessible by
+  integration". It only enables a site that was never created when it can, so
+  the one-time enablement needs an owner token (or Settings -> Pages once).
+  After that the step is a no-op and the deploy runs unattended.
+- Workflow run #3 on 9c7704f: SUCCESS. Verify the artifact — all steps green
+  (npm ci, check:showcase, package contracts, browser suite, staging, artifact
+  upload). Deploy to Pages — configure-pages and Deploy both green.
+- Deployed bytes are byte-identical to the repository file: sha256 of both
+  https://admos98.github.io/liquid-glass-suite/ and
+  https://admos98.github.io/liquid-glass-suite/showcase.html is
+  a274fb5977d07f92f745a48d2e2bb2cc138217787c2c80343ed582be0e67cfa7, matching
+  shared/assets/showcase.html. Root serves 283045 bytes of text/html.
+- Anonymous browser check: both URLs load, title "Liquid Glass Suite — standalone
+  refraction & rim showcase", h1 "Liquid Glass Suite", 4 canvases, 1 inline
+  script — no credentials used.
+- Repository homepage field set to the Pages root; has_pages true.
+- Earlier failed runs, kept as a record: run #1 and #2 failed in the package
+  contracts because the CI venv (.venv-ci) sat inside the checkout and the sweep
+  tests scanned pip's vendored sources; run #3's first attempt failed at
+  configure-pages for the reason above. Both are fixed.
