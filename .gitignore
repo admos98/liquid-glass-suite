@@ -9,6 +9,9 @@ env/
 .env.*
 test-results/
 playwright-report/
+# Artifacts written by `npx skills add` in a consumer checkout.
+.agents/
+skills-lock.json
 *.log
 .DS_Store
 Thumbs.db
