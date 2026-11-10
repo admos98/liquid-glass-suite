@@ -53,7 +53,7 @@ There are exactly two application paths: the shared CSS/JS drop-in by default, o
 
 ![Close-up: backdrop text bending through the panel](docs/showcase-closeup.png)
 
-Open the [standalone showcase](shared/assets/showcase.html) directly from disk. No server, build, network, or external assets are required.
+Open the [standalone showcase](shared/assets/showcase.html) from disk, or the [live one](https://admos98.github.io/liquid-glass-suite/showcase.html). No server, build, network, or external assets are required.
 
 ## Verify
 
@@ -73,19 +73,23 @@ The dev-only Chromium package supplies the Linux test runtime; on another platfo
 
 ## Install with other agents
 
-Generic Agent Skills CLIs read the same four `SKILL.md` files:
+Generic Agent Skills CLIs install the repository as **one skill carrying the whole
+suite**, including `shared/`:
 
 ```sh
 npx skills add admos98/liquid-glass-suite
 ```
+
+It registers the single entry `liquid-glass-suite`: those CLIs copy only a skill
+folder, and the four task skills reference `../../shared/...`, so installing them
+individually leaves every asset unreachable. The installed skill routes to
+`skills/<name>/SKILL.md`.
 
 ## FAQ
 
 **Is the project named "Liquid Glass Suit"?** The name is **Liquid Glass Suite**; both spellings point at `admos98/liquid-glass-suite`.
 
 **One skill or four?** Four task-focused skills share `shared/`. Install the whole plugin — copying one `skills/<name>` folder alone breaks its `../../shared/...` references.
-
-**Which agents are supported?** Claude Code via the plugin marketplace and generic Agent Skills CLIs via `npx skills add`. This Liquid Glass skill set uses portable `name` + `description` frontmatter.
 
 ## Scope and license
 

@@ -49,10 +49,12 @@
 /plugin marketplace add admos98/liquid-glass-suite
 /plugin install liquid-glass-suite@admos98-skills
 
-# Generic Agent Skills CLI
+# Generic Agent Skills CLI — installs one entry carrying the whole suite
 npx skills add admos98/liquid-glass-suite</pre>
     <p style="margin-bottom:0">Keep the suite intact. Each <code>skills/&lt;name&gt;</code> folder
-    references <code>../../shared/…</code>, so copying one folder alone breaks it.</p>
+    references <code>../../shared/…</code>, so copying one folder alone breaks it. The
+    generic CLI installs the suite as a single <code>liquid-glass-suite</code> skill for
+    exactly that reason; it routes to the four skills inside the installation.</p>
   </div>
 
   <h2>What is in the suite</h2>

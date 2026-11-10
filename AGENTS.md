@@ -19,6 +19,11 @@ Generic Agent Skills CLI:
 npx skills add admos98/liquid-glass-suite
 ```
 
+That installs the repository as **one skill** carrying the whole suite, because the
+CLI copies only a skill folder and the four task skills reference `../../shared/...`.
+The installed entry (`liquid-glass-suite`) is a router: do the task from
+`skills/<name>/SKILL.md` inside the installation.
+
 ## The four skills
 
 | Skill | Job |

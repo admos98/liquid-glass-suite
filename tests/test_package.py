@@ -45,6 +45,21 @@ def module(filename):
 
 
 class PackageContract(unittest.TestCase):
+    def test_root_install_wrapper_carries_the_shared_core(self):
+        # Generic Agent Skills CLIs (npx skills add) copy only a skill folder. The
+        # four task skills reference ../../shared/..., so they must NOT be discovered
+        # individually: a single root SKILL.md makes the CLI install the whole repo.
+        root_skill = ROOT / 'SKILL.md'
+        self.assertTrue(root_skill.is_file(),
+                        'Root SKILL.md is the install wrapper; without it the CLI installs '
+                        'the four skills without shared/ and every reference breaks')
+        text = root_skill.read_text(encoding='utf-8')
+        self.assertRegex(text, r'(?m)^name: liquid-glass-suite$')
+        self.assertRegex(text, r'(?m)^description: .+')
+        # The wrapper must route to all four skills, which must still exist.
+        for name in SKILLS:
+            self.assertIn(f'skills/{name}/', text, f'{name} must be routed from the wrapper')
+
     def test_skill_names_plugin_and_marketplace_match_the_installable_suite(self):
         plugin = json.loads((ROOT / '.claude-plugin/plugin.json').read_text())
         marketplace = json.loads((ROOT / '.claude-plugin/marketplace.json').read_text())
