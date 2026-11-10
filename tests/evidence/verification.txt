@@ -191,3 +191,32 @@ Discoverability pass (2026-11-09)
 - Pages deploy (run #6 on 14aaffa): success. The site root is now the landing page,
   with showcase.html kept at a stable path and llms.txt plus COMPARISON.md served
   alongside.
+
+Generic skills-CLI install — defect and fix (2026-11-09)
+- DEFECT, reproduced before the fix: `npx skills add admos98/liquid-glass-suite`
+  installed only `.agents/skills/<name>/` for the four skills, with no `shared/`.
+  From `.agents/skills/liquid-glass/`, `../../shared/assets/liquid-glass.css`
+  resolved to `.agents/shared/assets/liquid-glass.css`, which did not exist. 21
+  distinct references were dangling: liquid-glass.css, liquid-glass.js,
+  webgl-glass.js, showcase.html, showcase/optics.js, all sixteen references and all
+  three measurement scripts.
+- Cause: a generic Agent Skills CLI copies only a skill folder and exposes no
+  `--include`/extra-files option (`skills add --help` lists only `-g`, `-a`). Per-skill
+  discovery and a working install are mutually exclusive for a suite whose skills
+  reach into `../../shared/`.
+- The Claude Code plugin route was never affected: its cache is a full checkout,
+  so `plugins/cache/admos98-skills/liquid-glass-suite/<version>/shared/` exists.
+- FIX: a root `SKILL.md` (`name: liquid-glass-suite`) changes the CLI from "scan
+  every `skills/*/SKILL.md`" to installing the repository once, whole. It routes to
+  `skills/<name>/SKILL.md` for each job; all four skills ship inside the install.
+- Verified on the real CLI against the pushed commit: the install lands at
+  `.agents/skills/liquid-glass-suite/` with `shared/` and `skills/` present,
+  29 shared references checked across 5 skill files, 0 missing, and the blessed
+  `shared/assets/liquid-glass.css` resolvable from `skills/liquid-glass/`.
+- Accepted cost, documented in README/AGENTS.md/docs/index.html: the generic CLI now
+  registers one entry instead of four. The plugin route still reports all four
+  skills — confirmed by re-installing 2.0.2 into a fresh config: "Skills (4)
+  liquid-glass, liquid-glass-debug, liquid-glass-native, liquid-glass-optics".
+- Regression guard: `test_root_install_wrapper_carries_the_shared_core` asserts the
+  root SKILL.md exists, is named and described, and routes to all four skills.
+- `claude plugin validate . --strict` stays clean with the root SKILL.md present.
